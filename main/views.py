@@ -8,4 +8,8 @@ class MainView(View):
     """
 
     def get(self, request):
+        """
+        Render main page.
+        """
+        
         return render(request, "main/index.html")
