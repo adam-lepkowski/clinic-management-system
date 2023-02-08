@@ -1,5 +1,6 @@
 .form-container {
     align-items: center;
+    background-color: #EEEEEE;
     border-radius: 25px;
     border: 1px solid #CED0D3;
     display: flex;
@@ -38,6 +39,7 @@
     color: #658864;
     font-size: 2rem;
     font-weight: 400;
+    margin-bottom: 0.1rem;
 }
 
 .base-form button {
