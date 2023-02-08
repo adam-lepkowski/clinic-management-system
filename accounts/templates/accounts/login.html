@@ -10,6 +10,7 @@
 <div class="form-container">
     <h1>Sign in</h1>
     <form action="" method="POST" class="base-form">
+        {% csrf_token %}
         {% for field in form %}
             {{ field.label_tag }}
             {{ field }}
