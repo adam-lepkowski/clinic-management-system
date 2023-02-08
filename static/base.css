@@ -38,13 +38,13 @@ Navigation
 
 .nav-container {
     display: flex;
-    flex-grow: 1;
+    flex-grow: 2;
     justify-content: space-evenly;
 }
 
 .search-container {
     display: flex;
-    flex-grow: 2;
+    flex-grow: 3;
 }
 
 .search-container input {
@@ -68,6 +68,12 @@ Navigation
 
 .nav-link:hover {
     color: #4a6449;
+}
+
+.account-container {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-evenly;
 }
 
 .nav-separator {
