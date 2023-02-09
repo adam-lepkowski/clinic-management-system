@@ -1,3 +1,6 @@
+/*
+    form container
+*/
 .form-container {
     align-items: center;
     background-color: #EEEEEE;
@@ -16,6 +19,9 @@
     margin-bottom: 0.5rem;
 }
 
+/*
+    Base form
+*/
 .base-form {
     display: flex;
     flex-direction: column;
@@ -59,4 +65,35 @@
 .base-form button[type="submit"]:hover {
     color: #EEEEEE;
     background-color: #4a6449;
+}
+
+
+/*
+    Readonly form
+*/
+.readonly-form {
+    display: flex;
+    flex-direction: column;
+    width: 65%;
+}
+
+.readonly-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 2%;
+}
+
+.readonly-row label {
+    font-size: 1.5rem;
+}
+
+.readonly-row input {
+    border-color: #CED0D3;
+    border-style: solid;
+    border-radius: 25px;
+    color: #658864;
+    font-size: 1.3rem;
+    padding: 0 0.5rem;
+    text-align: center;
 }
