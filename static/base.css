@@ -81,3 +81,22 @@ Navigation
     border-top: none;
     border-bottom: 1px solid #CED0D3;
 }
+
+/*
+Content
+*/
+.content {
+    margin: 2rem auto;
+    width: 50%;
+}
+
+.section-heading {
+    color: #658864;
+    font-size: 2rem;
+}
+
+.section-separator {
+    margin: 1% 0 2% 0;
+    border-top: none;
+    border-bottom: 1px solid #CED0D3;
+}
