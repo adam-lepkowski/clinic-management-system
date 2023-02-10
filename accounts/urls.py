@@ -15,5 +15,9 @@ urlpatterns = [
     path("", ProfileView.as_view(), name="profile"),
     path("change-password", auth_views.PasswordChangeView.as_view(
             template_name="accounts/change_password.html",
-            form_class=PwdChangeForm))
+            form_class=PwdChangeForm,
+            success_url="password-changed")),
+    path("password-changed", auth_views.PasswordChangeDoneView.as_view(
+            template_name="accounts/password_changed.html"
+    ), name="password_change_done")
 ]
