@@ -3,6 +3,7 @@
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'forms.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/profile.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -18,8 +19,11 @@
             {{ field }}
         </div>
         {% endfor %}
+        <div class="readonly-row">
+            <label>Password</label>
+            <a href="" class="btn-green">Change password</a>
+        </div>
     </form>
-    <a href="" class="btn">Change password</a>
 </section>
 
 {% endblock %}
