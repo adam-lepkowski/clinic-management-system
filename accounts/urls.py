@@ -8,16 +8,29 @@ from .forms import PwdChangeForm
 app_name = "accounts"
 
 urlpatterns = [
-    path("login", auth_views.LoginView.as_view(
-        template_name="accounts/login.html",
-        redirect_authenticated_user=True)),
+    path(
+        "login",
+        auth_views.LoginView.as_view(
+            template_name="accounts/login.html", redirect_authenticated_user=True
+        ),
+    ),
     path("logout", auth_views.LogoutView.as_view(), name="logout"),
     path("", ProfileView.as_view(), name="profile"),
-    path("change-password", auth_views.PasswordChangeView.as_view(
+    path(
+        "change-password",
+        auth_views.PasswordChangeView.as_view(
             template_name="accounts/change_password.html",
             form_class=PwdChangeForm,
-            success_url="password-changed")),
-    path("password-changed", auth_views.PasswordChangeDoneView.as_view(
+            success_url="password-changed",
+        ),
+        name="change_password",
+    ),
+    path(
+        "password-changed",
+        auth_views.PasswordChangeDoneView.as_view(
             template_name="accounts/password_changed.html"
-    ), name="password_change_done")
+        ),
+        name="password_change_done",
+    ),
 ]
+
