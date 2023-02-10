@@ -6,18 +6,19 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="form-container">
-    <h1>Sign in</h1>
-    <form action="" method="POST" class="base-form">
-        {% csrf_token %}
-        {% for field in form %}
-            {{ field.label_tag }}
-            {{ field }}
-            {{ field.errors }}
-        {% endfor %}
-        <button type="submit">Sign in</button>
-    </form>
-</div>
+<section class="content">
+    <div class="form-container">
+        <h1>Sign in</h1>
+        <form action="" method="POST" class="base-form">
+            {% csrf_token %}
+            {% for field in form %}
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            {% endfor %}
+            <button type="submit">Sign in</button>
+        </form>
+    </div>
+</section>
 
 {% endblock %}
