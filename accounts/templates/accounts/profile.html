@@ -21,7 +21,7 @@
         {% endfor %}
         <div class="readonly-row">
             <label>Password</label>
-            <a href="" class="btn-green">Change password</a>
+            <a href="{% url 'accounts:change_password' %}" class="btn-green">Change password</a>
         </div>
     </form>
 </section>
