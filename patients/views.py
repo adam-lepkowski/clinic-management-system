@@ -47,4 +47,8 @@ class RegistrationView(View):
 
 
 class SuccessRegistrationView(TemplateView):
+    """
+    Redirect page after successful patient registration.
+    """
+    
     template_name = "patients/success_register.html"
