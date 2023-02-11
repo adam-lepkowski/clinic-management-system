@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic.base import TemplateView
 
 from .forms import PatientForm, AddressForm
 
@@ -43,3 +44,7 @@ class RegistrationView(View):
             "address_form": address_form
         }
         return render(request, "patients/register.html", context)
+
+
+class SuccessRegistrationView(TemplateView):
+    template_name = "patients/success_register.html"
