@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 
 from .forms import PatientForm, AddressForm
@@ -16,6 +16,28 @@ class RegistrationView(View):
 
         patient_form = PatientForm(prefix="patient")
         address_form = AddressForm(prefix="address")
+        context = {
+            "patient_form": patient_form,
+            "address_form": address_form
+        }
+        return render(request, "patients/register.html", context)
+
+    def post(self, request):
+        """
+        Save registered patient details or display page with error messages.
+        """
+
+        patient_form = PatientForm(request.POST, prefix="patient")
+        address_form = AddressForm(request.POST, prefix="address")
+
+        if address_form.is_valid():
+            if patient_form.is_valid():
+                address = address_form.save()
+                patient = patient_form.save(commit=False)
+                patient.address = address
+                patient.save()
+                return redirect("/")
+
         context = {
             "patient_form": patient_form,
             "address_form": address_form
