@@ -37,7 +37,7 @@ class RegistrationView(View):
                 patient = patient_form.save(commit=False)
                 patient.address = address
                 patient.save()
-                return redirect("/")
+                return redirect("/patient/registered")
 
         context = {
             "patient_form": patient_form,
