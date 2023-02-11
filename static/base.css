@@ -123,3 +123,15 @@ h6 {
 .btn-green:active {
     background-color: #3c523c;
 }
+
+/*
+    Positioning
+*/
+
+.align-end {
+    align-self: flex-end;
+}
+
+.align-start {
+    align-self: flex-start;
+}
