@@ -42,6 +42,7 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
+    personal_id = models.CharField(max_length=11, unique=True)
     email = models.EmailField()
     phone = models.CharField(max_length=10)
     address = models.OneToOneField(
