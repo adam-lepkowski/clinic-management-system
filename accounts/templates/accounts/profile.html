@@ -12,14 +12,14 @@
 <section class="content">
     <h2 class="section-heading">Personal</h2>
     <hr class="section-separator">
-    <form action="" class="readonly-form">
+    <form action="" class="narrow-form">
         {% for field in form %}
-        <div class="readonly-row">
+        <div class="narrow-row">
             {{ field.label_tag }}
             {{ field }}
         </div>
         {% endfor %}
-        <div class="readonly-row">
+        <div class="narrow-row">
             <label>Password</label>
             <a href="{% url 'accounts:change_password' %}" class="btn-green">Change password</a>
         </div>
