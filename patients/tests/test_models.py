@@ -18,6 +18,7 @@ class TestPatient(TestCase):
             first_name="Johnny",
             last_name="Test",
             date_of_birth="2022-12-12",
+            personal_id="12345678911",
             email="email@email.com",
             phone="0123456789",
             address=self.address
