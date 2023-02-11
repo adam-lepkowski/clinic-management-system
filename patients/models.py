@@ -21,9 +21,9 @@ class Address(models.Model):
         Full address.
         """
 
-        apartment = self.apartment if self.apartment else ""
-        street = f"{self.street} {self.number} {apartment}"
-        full_address = f"{street}{self.zip_code} {self.city} {self.country}"
+        apartment = '/' + self.apartment if self.apartment else ""
+        street = f"{self.street} {self.number}{apartment}"
+        full_address = f"{street} {self.zip_code} {self.city} {self.country}"
         return full_address
     
     def __str__(self):
