@@ -21,7 +21,7 @@ h6 {
 }
 
 /*
-Navigation
+    Navigation
 */
 .navigation {
     background-color: #EEEEEE;
@@ -83,7 +83,7 @@ Navigation
 }
 
 /*
-Content
+    Content
 */
 .content {
     margin: 2rem auto;
@@ -99,4 +99,27 @@ Content
     margin: 1% 0 2% 0;
     border-top: none;
     border-bottom: 1px solid #CED0D3;
+}
+
+/*
+    Buttons
+*/
+
+.btn-green {
+    background-color: #658864;
+    border: 1px solid #9d9e9e;
+    border-radius: 25px;
+    color: #EEEEEE;
+    font-size: 1.3rem;
+    padding: 0.2rem 1rem;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-green:hover {
+    background-color: #4a6449;
+}
+
+.btn-green:active {
+    background-color: #3c523c;
 }
