@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views import View
 
 from .forms import PatientForm, AddressForm
+from .models import Patient
 
 
 class RegistrationView(View):
@@ -52,7 +53,7 @@ class SuccessRegistrationView(View):
     """
     Redirect page after successful patient registration.
     """
-    
+
     def get(self, request):
         """
         Display success page if redirected after successful patient
@@ -62,5 +63,25 @@ class SuccessRegistrationView(View):
         if request.session.get("patient-registered", False):
             request.session["patient-registered"] = False
             return render(request, "patients/success_register.html")
-        
+
         return HttpResponseRedirect(reverse("patients:register"))
+
+
+class PatientView(View):
+    """
+    Display single patient personal information and treatment history.
+    """
+
+    def get(self, request, pk):
+        """
+        Display single patient details in a editable form.
+        """
+
+        patient = Patient.objects.get(id=pk)
+        patient_form = PatientForm(instance=patient, prefix="patient")
+        address_form = AddressForm(instance=patient.address, prefix="address")
+        context = {
+            "patient_form": patient_form,
+            "address_form": address_form
+        }
+        return render(request, "patients/patient.html", context)
