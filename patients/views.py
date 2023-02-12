@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import View
@@ -34,14 +34,13 @@ class RegistrationView(View):
         patient_form = PatientForm(request.POST, prefix="patient")
         address_form = AddressForm(request.POST, prefix="address")
 
-        if address_form.is_valid():
-            if patient_form.is_valid():
-                address = address_form.save()
-                patient = patient_form.save(commit=False)
-                patient.address = address
-                patient.save()
-                request.session["patient-registered"] = True
-                return HttpResponseRedirect(reverse("patients:registered"))
+        if address_form.is_valid() and patient_form.is_valid():
+            address = address_form.save()
+            patient = patient_form.save(commit=False)
+            patient.address = address
+            patient.save()
+            request.session["patient-registered"] = True
+            return HttpResponseRedirect(reverse("patients:registered"))
 
         context = {
             "patient_form": patient_form,
@@ -79,7 +78,7 @@ class PatientView(View):
         Display single patient details in a editable form.
         """
 
-        patient = Patient.objects.get(id=pk)
+        patient = get_object_or_404(Patient, id=pk)
         patient_form = PatientForm(instance=patient, prefix="patient")
         address_form = AddressForm(instance=patient.address, prefix="address")
         context = {
