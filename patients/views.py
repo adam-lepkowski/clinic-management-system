@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import View
-from django.views.generic.base import TemplateView
 
 from .forms import PatientForm, AddressForm
 
@@ -49,9 +48,19 @@ class RegistrationView(View):
         return render(request, "patients/register.html", context)
 
 
-class SuccessRegistrationView(TemplateView):
+class SuccessRegistrationView(View):
     """
     Redirect page after successful patient registration.
     """
     
-    template_name = "patients/success_register.html"
+    def get(self, request):
+        """
+        Display success page if redirected after successful patient
+        registration. Redirect to registration form otherwise.
+        """
+
+        if request.session.get("patient-registered", False):
+            request.session["patient-registered"] = False
+            return render(request, "patients/success_register.html")
+        
+        return HttpResponseRedirect(reverse("patients:register"))
