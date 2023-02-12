@@ -87,3 +87,28 @@ class PatientView(View):
             "mode": "Update"
         }
         return render(request, "patients/patient.html", context)
+
+    def post(self, request, pk):
+        """
+        Update patient personal details and display them imidiately on success.
+        Display page with errors otherwise.
+        """
+
+        patient = get_object_or_404(Patient, id=pk)
+        patient_form = PatientForm(
+            request.POST, instance=patient, prefix="patient")
+        address_form = AddressForm(
+            request.POST, instance=patient.address, prefix="address")
+
+        if ((patient_form.changed_data or address_form.changed_data) and
+                (address_form.is_valid() and patient_form.is_valid())):
+            address_form.save()
+            patient_form.save()
+            return HttpResponseRedirect(reverse("patients:patient", args=[pk]))
+
+        context = {
+            "patient_form": patient_form,
+            "address_form": address_form,
+            "mode": "Update"
+        }
+        return render(request, "patients/patient.html", context)
