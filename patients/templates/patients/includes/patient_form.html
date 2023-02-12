@@ -1,6 +1,13 @@
-<form action="" method="POST">
+<form action="" method="POST" class="patient-details-form">
     {% csrf_token %}
+    {% if mode == 'Update' %}
+    <div class="start-container">
+        <h2 class="section-heading">Personal</h2>
+        <i class="fa-solid fa-user-pen nav-link edit"></i>
+    </div>
+    {% else %}
     <h2 class="section-heading">Personal</h2>
+    {% endif %}
     <hr class="section-separator">
     <div class="narrow-form">
         {% for field in patient_form %}
@@ -23,7 +30,7 @@
         {% endfor %}
         <div class="narrow-row">
             {% if mode == 'Update' %}
-            <button type="button" class="btn-red">Cancel</button>
+            <button type="button" class="btn-red" onclick="restoreDefault()">Cancel</button>
             {% endif %}
             <button type="submit" class="btn-green">{{ mode }}</button>
         </div>
