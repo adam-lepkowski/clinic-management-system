@@ -70,6 +70,10 @@ h6 {
     color: #4a6449;
 }
 
+.nav-link:active {
+    color: #395138;
+}
+
 .account-container {
     display: flex;
     flex-grow: 1;
@@ -93,6 +97,7 @@ h6 {
 .section-heading {
     color: #658864;
     font-size: 2rem;
+    margin-right: 1rem;
 }
 
 .section-separator {
@@ -153,4 +158,11 @@ h6 {
 
 .align-start {
     align-self: flex-start;
+}
+
+.start-container {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
 }
