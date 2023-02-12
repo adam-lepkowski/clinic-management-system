@@ -21,7 +21,8 @@ class RegistrationView(View):
         address_form = AddressForm(prefix="address")
         context = {
             "patient_form": patient_form,
-            "address_form": address_form
+            "address_form": address_form,
+            "mode": "Register"
         }
         return render(request, "patients/register.html", context)
 
@@ -44,7 +45,8 @@ class RegistrationView(View):
 
         context = {
             "patient_form": patient_form,
-            "address_form": address_form
+            "address_form": address_form,
+            "mode": "Register"
         }
         return render(request, "patients/register.html", context)
 
@@ -82,6 +84,7 @@ class PatientView(View):
         address_form = AddressForm(instance=patient.address, prefix="address")
         context = {
             "patient_form": patient_form,
-            "address_form": address_form
+            "address_form": address_form,
+            "mode": "Update"
         }
         return render(request, "patients/patient.html", context)
