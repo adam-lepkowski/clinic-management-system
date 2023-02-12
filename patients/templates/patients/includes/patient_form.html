@@ -21,6 +21,11 @@
             {{ field.errors }}
         </div>
         {% endfor %}
-        <button type="submit" class="btn-green align-end">Register</button>
+        <div class="narrow-row">
+            {% if mode == 'Update' %}
+            <button type="button" class="btn-red">Cancel</button>
+            {% endif %}
+            <button type="submit" class="btn-green">{{ mode }}</button>
+        </div>
     </div>
 </form>
