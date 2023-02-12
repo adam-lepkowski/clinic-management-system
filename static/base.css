@@ -124,6 +124,25 @@ h6 {
     background-color: #3c523c;
 }
 
+.btn-red {
+    background-color: #C87972;
+    border: 1px solid #9d9e9e;
+    border-radius: 25px;
+    color: #EEEEEE;
+    font-size: 1.3rem;
+    padding: 0.2rem 1rem;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-red:hover {
+    background-color: #b06b65;
+}
+
+.btn-red:active {
+    background-color: #9a5650;
+}
+
 /*
     Positioning
 */
