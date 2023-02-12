@@ -25,6 +25,12 @@ class TestRegistrationView(TestCase):
         data = self.address | self.patient
         response = self.client.post("/patient/register", data, follow=True)
         self.assertRedirects(response, "/patient/registered")
+    
+    def test_registration_valid_forms_sets_session_attr(self):
+        data = self.address | self.patient
+        self.client.post("/patient/register", data)
+        result = self.client.session.get("patient-registered", False)
+        self.assertTrue(result)
 
     def test_registration_invalid_address_form(self):
         self.address["address-city"] = ""
