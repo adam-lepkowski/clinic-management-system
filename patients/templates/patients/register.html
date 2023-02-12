@@ -13,32 +13,7 @@
 {% include 'includes/navbar.html' %}
 
 <section class="content">
-    <form action="" method="POST">
-        {% csrf_token %}
-        <h2 class="section-heading">Personal</h2>
-        <hr class="section-separator">
-        <div class="narrow-form">
-            {% for field in patient_form %}
-            <div class="narrow-row">
-                {{ field.label_tag }}
-                {{ field }}
-                {{ field.errors }}
-            </div>
-            {% endfor %}
-        </div>
-        <h2 class="section-heading">Address</h2>
-        <hr class="section-separator">
-        <div class="narrow-form">
-            {% for field in address_form %}
-            <div class="narrow-row">
-                {{ field.label_tag }}
-                {{ field }}
-                {{ field.errors }}
-            </div>
-            {% endfor %}
-            <button type="submit" class="btn-green align-end">Register</button>
-        </div>
-    </form>
+    {% include 'patients/includes/patient_form.html' %}
 </section>
 
 {% endblock %}
