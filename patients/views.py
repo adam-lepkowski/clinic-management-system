@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.views import View
 from django.views.generic.base import TemplateView
 
@@ -37,7 +39,8 @@ class RegistrationView(View):
                 patient = patient_form.save(commit=False)
                 patient.address = address
                 patient.save()
-                return redirect("/patient/registered")
+                request.session["patient-registered"] = True
+                return HttpResponseRedirect(reverse("patients:registered"))
 
         context = {
             "patient_form": patient_form,
