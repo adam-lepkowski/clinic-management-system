@@ -6,8 +6,10 @@
             <a href="{% url 'patients:register' %}" class="nav-link">Register</a>
         </div>
         <div class="search-container">
-            <input type="text" class="search">
-            <a href="" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>
+            <form action="">
+                <input type="text" class="search">
+                <button type="submit" class="search-button fa-solid fa-magnifying-glass nav-link"></button>
+            </form>
         </div>
         <div class="account-container">
             <a href="{% url 'accounts:profile' %}" class="nav-link"><i class="fa-regular fa-user"></i></a>
