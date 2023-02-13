@@ -6,8 +6,8 @@
             <a href="{% url 'patients:register' %}" class="nav-link">Register</a>
         </div>
         <div class="search-container">
-            <form action="">
-                <input type="text" class="search">
+            <form action="{% url 'patients:search_results' %}" method="GET">
+                <input type="text" class="search" name="query" placeholder="Search...">
                 <button type="submit" class="search-button fa-solid fa-magnifying-glass nav-link"></button>
             </form>
         </div>
