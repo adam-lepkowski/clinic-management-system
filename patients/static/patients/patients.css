@@ -1,0 +1,15 @@
+.search-results {
+    width: 80%;
+}
+
+.search-results-row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.search-results-row p {
+    font-size: 1.2rem;
+    margin: 0;
+}
