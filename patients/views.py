@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import View
+from django.views.generic import ListView
+from django.db.models import Q
 
 from .forms import PatientForm, AddressForm
 from .models import Patient
@@ -112,3 +114,25 @@ class PatientView(View):
             "mode": "Update"
         }
         return render(request, "patients/patient.html", context)
+
+
+class SearchResultsView(ListView):
+    """
+    Display patient search results.
+    """
+
+    model = Patient
+    template_name = "patients/search_results.html"
+    context_object_name = "patients"
+
+    def get_queryset(self):
+        """
+        Check for searched phrase in first_name, last_name and personal_id
+        """
+
+        base = super().get_queryset()
+        q = self.request.GET.get("query")
+        data = base.filter(
+            Q(first_name__icontains=q) | Q(last_name__icontains=q) |
+            Q(personal_id__icontains=q))
+        return data
