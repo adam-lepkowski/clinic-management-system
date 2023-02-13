@@ -148,6 +148,11 @@ h6 {
     background-color: #9a5650;
 }
 
+.search-button {
+    border: 0 none;
+    padding: 0;
+}
+
 /*
     Positioning
 */
