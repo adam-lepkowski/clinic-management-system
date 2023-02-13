@@ -2,16 +2,28 @@
 {% load static %}
 
 {% block title %}
-    Patient registered!
+Search results
 {% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="{% static 'patients/patients.css' %}">
+{% endblock %}
 
 {% block content %}
 {% include 'includes/navbar.html' %}
 
 <section class="content">
-   <h2 class="section-heading">Search results</h2>
-   <hr class="section-separator">
+    <h2 class="section-heading">Search results</h2>
+    <hr class="section-separator">
+    <div class="search-results">
+        {% for patient in patients %}
+        <div class="search-results-row">
+            <p>{{ patient.first_name|title }} {{ patient.last_name|title }}, {{ patient.personal_id }}</p>
+            <a href="{% url 'patients:patient' patient.id %}" class="btn-green">Details</a>
+        </div>
+        <hr class="section-separator">
+        {% endfor %}
+    </div>
 </section>
 
 {% endblock %}
