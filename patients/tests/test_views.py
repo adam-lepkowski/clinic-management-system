@@ -128,3 +128,33 @@ class TestPatientView(TestCase):
         response = self.client.post("/patient/1", data=self.data, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.redirect_chain), 0)
+
+
+class TestSearchResultsView(TestCase):
+
+    def setUp(self):
+        self.address = Address.objects.create(
+            street="Test Lane",
+            number="12a",
+            apartment="123",
+            zip_code="00-000",
+            city="Testington",
+            country="Republic of Testland"
+        )
+        self.patient_1 = Patient.objects.create(
+            first_name="Johnny",
+            last_name="Test",
+            date_of_birth="2022-12-12",
+            personal_id="12345678911",
+            email="email@email.com",
+            phone="0123456789",
+            address=self.address
+        )
+
+    def test_search_result_view(self):
+        response = self.client.get("/patient/search-results?query=test")
+        self.assertTemplateUsed(response, "patients/search_results.html")
+    
+    def test_no_search_data_raises_404(self):
+        response = self.client.get("/patient/search-results")
+        self.assertTemplateUsed(response, "404.html")
