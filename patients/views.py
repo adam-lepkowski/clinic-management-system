@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView
@@ -131,8 +131,10 @@ class SearchResultsView(ListView):
         """
 
         base = super().get_queryset()
-        q = self.request.GET.get("query")
-        data = base.filter(
-            Q(first_name__icontains=q) | Q(last_name__icontains=q) |
-            Q(personal_id__icontains=q))
-        return data
+        q = self.request.GET.get("query", None)
+        if q:
+            data = base.filter(
+                Q(first_name__icontains=q) | Q(last_name__icontains=q) |
+                Q(personal_id__icontains=q))
+            return data
+        raise Http404()
