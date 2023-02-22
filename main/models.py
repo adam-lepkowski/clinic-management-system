@@ -10,4 +10,4 @@ class Schedule(models.Model):
     date = models.DateField()
     start = models.TimeField()
     end = models.TimeField()
-    employee_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    employee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
