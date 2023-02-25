@@ -10,7 +10,10 @@ class ScheduleModelForm(forms.ModelForm):
     Apply work time to a range of dates when upading schedule from admin page.
     """
 
-    date_to = forms.DateField(label="Date to", required=False)
+    date_to = forms.DateField(
+        label="Date to",
+        required=False,
+        widget=forms.SelectDateWidget)
 
     class Meta:
         model = Schedule
