@@ -67,6 +67,20 @@
     background-color: #4a6449;
 }
 
+.wide-form select {
+    background-color: #ffffff;
+    border-color: #CED0D3;
+    border-style: solid;
+    border-radius: 25px;
+    font-size: 1.5rem;
+    margin: 0.5rem 0 1rem;
+    padding: 0 0.5rem;
+}
+
+.wide-form select:hover {
+    border-color: #9d9e9e;
+}
+
 
 /*
     Narrow form (65% width)
