@@ -2,7 +2,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="{% url 'main:main' %}" class="nav-link">Main</a>
-            <a href="" class="nav-link">Schedule</a>
+            <a href="{% url 'main:schedule' %}" class="nav-link">Schedule</a>
             <a href="{% url 'patients:register' %}" class="nav-link">Register</a>
         </div>
         <div class="search-container">
@@ -12,8 +12,12 @@
             </form>
         </div>
         <div class="account-container">
-            <a href="{% url 'accounts:profile' %}" class="nav-link"><i class="fa-regular fa-user"></i></a>
-            <a href="{% url 'accounts:logout' %}" class="nav-link logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            <a href="{% url 'accounts:profile' %}" class="nav-link">
+                <i class="fa-regular fa-user"></i>
+            </a>
+            <a href="{% url 'accounts:logout' %}" class="nav-link logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </a>
         </div>
     </nav>
     <hr class="nav-separator">
