@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.views import View
+from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from .forms import ScheduleSearchForm
+from .models import Schedule
 
 
 class MainView(LoginRequiredMixin, View):
@@ -41,3 +44,27 @@ class ScheduleSearchView(View):
         }
 
         return render(request, "main/schedule.html", context)
+
+
+class ScheduleListView(ListView):
+    """
+    Display schedule search results.
+    """
+
+    model = Schedule
+    template_name = "main/schedule_search_results.html"
+    context_object_name = "dates"
+
+    def get_queryset(self):
+        """
+        Query based on GET request parameters.
+        """
+
+        base = super().get_queryset()
+        spec_id = self.request.GET.get("specialties")
+        emp_id = self.request.GET.get("employee")
+        date = self.request.GET.get("date")
+        data = base.filter(Q(employee__groups__id=spec_id)
+                           & Q(employee__id = emp_id)
+                           & Q(date=date))
+        return data
