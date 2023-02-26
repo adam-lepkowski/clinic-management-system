@@ -15,7 +15,7 @@
 <section class="content">
     <div class="wide-form-container">
         <h1>Schedule</h1>
-        <form action="" method="POST" class="wide-form">
+        <form id="schedule-form" action="" method="POST" class="wide-form" specialties-url="{% url 'main:schedule' %}">
             {% csrf_token %}
             {% for field in form %}
                 {{ field.label_tag }}
@@ -26,5 +26,6 @@
         </form>
     </div>
 </section>
+<script src="{% static 'main/main.js' %}"></script>
 
 {% endblock %}
