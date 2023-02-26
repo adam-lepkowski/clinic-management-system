@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 
 from django import forms
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 
 from .models import Schedule
 
@@ -33,3 +33,4 @@ class ScheduleSearchForm(forms.Form):
 
     specialties = forms.ModelChoiceField(queryset=Group.objects.all())
     date = forms.DateField(widget=forms.Select(choices=AVAILABLE_DATES))
+    employee = forms.ModelChoiceField(queryset=User.objects.none())
