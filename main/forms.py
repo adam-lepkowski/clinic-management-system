@@ -6,7 +6,8 @@ from django.contrib.auth.models import Group, User
 from .models import Schedule
 
 
-AVAILABLE_DATES = [(i + 1, date.today() + timedelta(days=i)) for i in range(7)]
+AVAILABLE_DATES = [date.today() + timedelta(days=i) for i in range(7)]
+AVAILABLE_DATES = [(d, d) for d in AVAILABLE_DATES]
 
 
 class ScheduleModelForm(forms.ModelForm):
@@ -34,3 +35,14 @@ class ScheduleSearchForm(forms.Form):
     specialties = forms.ModelChoiceField(queryset=Group.objects.all())
     date = forms.DateField(widget=forms.Select(choices=AVAILABLE_DATES))
     employee = forms.ModelChoiceField(queryset=User.objects.none())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if "employee" in self.data:
+            try:
+                emp_id = int(self.data.get("employee"))
+                self.fields["employee"].queryset = User.objects.filter(id=emp_id)
+            except (ValueError, TypeError):
+                pass
+        
