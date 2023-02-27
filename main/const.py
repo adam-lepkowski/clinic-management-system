@@ -1,0 +1,1 @@
+APPOINTMENT_TIME = 30       # Minutes.
