@@ -46,25 +46,23 @@ class ScheduleSearchView(View):
         return render(request, "main/schedule.html", context)
 
 
-class ScheduleListView(ListView):
+class ScheduleListView(View):
     """
     Display schedule search results.
     """
 
-    model = Schedule
-    template_name = "main/schedule_search_results.html"
-    context_object_name = "dates"
-
-    def get_queryset(self):
+    def get(self, request):
         """
-        Query based on GET request parameters.
+        Search results.
         """
 
-        base = super().get_queryset()
-        spec_id = self.request.GET.get("specialties")
-        emp_id = self.request.GET.get("employee")
-        date = self.request.GET.get("date")
-        data = base.filter(Q(employee__groups__id=spec_id)
-                           & Q(employee__id = emp_id)
-                           & Q(date=date))
-        return data
+        spec_id = request.GET.get("specialties")
+        emp_id = request.GET.get("employee")
+        date = request.GET.get("date")
+        data = Schedule.objects.filter(Q(employee__groups__id=spec_id)
+                                       & Q(employee__id=emp_id)
+                                       & Q(date=date))
+        context = {
+            "dates": data
+        }
+        return render(request, "main/schedule_search_results.html", context)
