@@ -57,3 +57,9 @@ class TestScheduleListView(TestCase):
         response = self.client.get('/schedule/search-results', data=self.data)
         self.assertEqual(response.context["dates"][0], self.schedule)
         self.assertEqual(len(response.context["dates"]), 1)
+
+    def test_get_no_emp(self):
+        self.data["employee"] = ""
+        response = self.client.get('/schedule/search-results', data=self.data)
+        self.assertEqual(response.context["dates"][0], self.schedule)
+        self.assertEqual(len(response.context["dates"]), 1)
