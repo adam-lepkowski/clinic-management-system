@@ -34,7 +34,8 @@ class ScheduleSearchForm(forms.Form):
 
     specialties = forms.ModelChoiceField(queryset=Group.objects.all())
     date = forms.DateField(widget=forms.Select(choices=AVAILABLE_DATES))
-    employee = forms.ModelChoiceField(queryset=User.objects.none())
+    employee = forms.ModelChoiceField(
+        queryset=User.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

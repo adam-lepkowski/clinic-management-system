@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -57,11 +56,15 @@ class ScheduleListView(View):
         """
 
         spec_id = request.GET.get("specialties")
-        emp_id = request.GET.get("employee")
+        emp_id = request.GET.get("employee", None)
         date = request.GET.get("date")
-        data = Schedule.objects.filter(Q(employee__groups__id=spec_id)
-                                       & Q(employee__id=emp_id)
-                                       & Q(date=date))
+        if emp_id:
+            data = Schedule.objects.filter(Q(employee__groups__id=spec_id)
+                                           & Q(employee__id=emp_id)
+                                           & Q(date=date))
+        else:
+            data = Schedule.objects.filter(Q(employee__groups__id=spec_id)
+                                           & Q(date=date))
         context = {
             "dates": data
         }
