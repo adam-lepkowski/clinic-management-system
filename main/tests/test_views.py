@@ -32,13 +32,14 @@ class TestScheduleListView(TestCase):
             username="TestUserTheSecond",
             first_name="Secondton",
             last_name="Testerly-Hills")
+        user2.groups.add(group)
         user2.groups.add(group2)
         self.schedule = Schedule.objects.create(
             date="2023-01-01",
             start="08:00",
             end="16:00",
             employee=user)
-        Schedule.objects.create(
+        self.schedule2 = Schedule.objects.create(
             date="2023-01-01",
             start="08:00",
             end="16:00",
@@ -58,8 +59,9 @@ class TestScheduleListView(TestCase):
         self.assertEqual(response.context["dates"][0], self.schedule)
         self.assertEqual(len(response.context["dates"]), 1)
 
-    def test_get_no_emp(self):
+    def test_get_no_emp_gets_two_schedules(self):
         self.data["employee"] = ""
         response = self.client.get('/schedule/search-results', data=self.data)
         self.assertEqual(response.context["dates"][0], self.schedule)
-        self.assertEqual(len(response.context["dates"]), 1)
+        self.assertEqual(response.context["dates"][1], self.schedule2)
+        self.assertEqual(len(response.context["dates"]), 2)
