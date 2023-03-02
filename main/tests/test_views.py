@@ -1,7 +1,7 @@
-from django.test import TestCase
-from django.contrib.auth.models import User, Group
+from unittest.mock import patch, call
 
-from ..models import Schedule
+from django.test import TestCase
+
 from ..forms import ScheduleSearchForm
 
 
@@ -21,47 +21,33 @@ class TestScheduleSearchView(TestCase):
 class TestScheduleListView(TestCase):
 
     def setUp(self):
-        group = Group.objects.create(name="TestGroup")
-        group2 = Group.objects.create(name="TestGroup2")
-        user = User.objects.create(
-            username="TestUser",
-            first_name="Teston",
-            last_name="Testingly")
-        user.groups.add(group)
-        user2 = User.objects.create(
-            username="TestUserTheSecond",
-            first_name="Secondton",
-            last_name="Testerly-Hills")
-        user2.groups.add(group)
-        user2.groups.add(group2)
-        self.schedule = Schedule.objects.create(
-            date="2023-01-01",
-            start="08:00",
-            end="16:00",
-            employee=user)
-        self.schedule2 = Schedule.objects.create(
-            date="2023-01-01",
-            start="08:00",
-            end="16:00",
-            employee=user2)
         self.data = {
             "specialties": 1,
             "date": "2023-01-01",
             "employee": 1
         }
 
-    def test_get(self):
+    @patch("main.views.Schedule.objects.filter")
+    def test_get(self, mock_schedule_filter):
         response = self.client.get('/schedule/search-results', data=self.data)
         self.assertTemplateUsed(response, "main/schedule_search_results.html")
 
-    def test_response_queryset(self):
-        response = self.client.get('/schedule/search-results', data=self.data)
-        self.assertEqual(response.context["dates"][0], self.schedule)
-        self.assertEqual(len(response.context["dates"]), 1)
+    @patch("main.views.Q")
+    @patch("main.views.Schedule.objects.filter")
+    def test_schedule_q_calls_emp(self, mock_schedule_filter, mock_views_q):
+        self.client.get('/schedule/search-results', data=self.data)
+        expected_q_calls = [
+            call(employee__groups__id="1"),
+            call(employee__id="1"),
+            call(date="2023-01-01")]
+        self.assertEqual(mock_views_q.call_args_list, expected_q_calls)
 
-    def test_get_no_emp_gets_two_schedules(self):
+    @patch("main.views.Q")
+    @patch("main.views.Schedule.objects.filter")
+    def test_schedule_q_calls_no_emp(self, mock_schedule_filter, mock_views_q):
         self.data["employee"] = ""
-        response = self.client.get('/schedule/search-results', data=self.data)
-        self.assertEqual(response.context["dates"][0], self.schedule)
-        self.assertEqual(response.context["dates"][1], self.schedule2)
-        self.assertEqual(len(response.context["dates"]), 2)
+        self.client.get('/schedule/search-results', data=self.data)
+        expected_q_calls = [
+            call(employee__groups__id="1"),
+            call(date="2023-01-01")]
+        self.assertEqual(mock_views_q.call_args_list, expected_q_calls)
