@@ -171,3 +171,10 @@ h6 {
     flex-direction: row;
     justify-content: flex-start;
 }
+
+.spaced-container {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
