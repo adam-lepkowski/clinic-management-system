@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,6 +8,7 @@ from django.db.models import Q
 
 from .forms import ScheduleSearchForm
 from .models import Schedule
+from .utils import get_day_schedule
 
 
 class MainView(LoginRequiredMixin, View):
@@ -59,13 +62,15 @@ class ScheduleListView(View):
         emp_id = request.GET.get("employee", None)
         date = request.GET.get("date")
         if emp_id:
-            data = Schedule.objects.filter(Q(employee__groups__id=spec_id)
-                                           & Q(employee__id=emp_id)
-                                           & Q(date=date))
+            schedules = Schedule.objects.filter(Q(employee__groups__id=spec_id)
+                                                & Q(employee__id=emp_id)
+                                                & Q(date=date))
         else:
-            data = Schedule.objects.filter(Q(employee__groups__id=spec_id)
-                                           & Q(date=date))
+            schedules = Schedule.objects.filter(Q(employee__groups__id=spec_id)
+                                                & Q(date=date))
+
         context = {
-            "dates": data
+            "date": datetime.datetime.strptime(date, "%Y-%m-%d"),
+            "schedule": get_day_schedule(schedules)
         }
         return render(request, "main/schedule_search_results.html", context)
