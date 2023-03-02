@@ -49,7 +49,7 @@ def get_day_schedule(schedules):
         available_hours = get_appointment_times(schedule)
         for hour in available_hours:
             appointment_details = {
-                "employee_id": schedule.employee__id,
+                "employee_id": schedule.employee.id,
                 "employee_full_name": schedule.emp_full_name,
                 "date": schedule.date,
                 "hour": hour}
