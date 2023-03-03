@@ -40,8 +40,11 @@ def get_day_schedule(schedules):
 
     Returns
     ----------
-    list
-        dictionaries of appointment details.
+    list of dictionaries
+        employee_id : int
+        employee_full_name : str
+        date : datetime.date
+        hour : datetime.time
     """
 
     day_schedule_by_available_hours = []
@@ -50,7 +53,7 @@ def get_day_schedule(schedules):
         for hour in available_hours:
             appointment_details = {
                 "employee_id": schedule.employee.id,
-                "employee_full_name": schedule.emp_full_name,
+                "employee_full_name": schedule.emp_full_name(),
                 "date": schedule.date,
                 "hour": hour}
             day_schedule_by_available_hours.append(appointment_details)
