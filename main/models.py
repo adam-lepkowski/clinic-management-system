@@ -12,6 +12,14 @@ class Schedule(models.Model):
     end = models.TimeField()
     employee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=("date", "employee"),
+                name="unique_employee_work_date",
+                violation_error_message="Employee already has a shift"\
+                    "scheduled for that day!")]
+
     def __str__(self):
         return f"{self.emp_full_name()} {self.date}"
 
