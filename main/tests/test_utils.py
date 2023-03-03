@@ -38,7 +38,7 @@ class TestGetDaySchedule(TestCase):
     @patch("main.models.Schedule")
     @patch("main.utils.get_appointment_times", return_value=["8", "9", "10"])
     def test_get_day_schedule(self, mock_appointments, mock_schedule):
-        mock_schedule.emp_full_name = "Teston Testingly"
+        mock_schedule.emp_full_name.return_value = "Teston Testingly"
         mock_schedule.employee.id = "1"
         mock_schedule.date = "2023-01-01"
         result = get_day_schedule([mock_schedule])
