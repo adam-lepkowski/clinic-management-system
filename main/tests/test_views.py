@@ -32,6 +32,11 @@ class TestScheduleSearchView(TestCase):
 class TestScheduleListView(TestCase):
 
     def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_name",
+            email="test@email.com",
+            password="test_pw"
+        )
         self.data = {
             "specialties": 1,
             "date": "2023-01-01",
@@ -40,12 +45,14 @@ class TestScheduleListView(TestCase):
 
     @patch("main.views.Schedule.objects.filter")
     def test_get(self, mock_schedule_filter):
+        self.client.force_login(self.user)
         response = self.client.get('/schedule/search-results', data=self.data)
         self.assertTemplateUsed(response, "main/schedule_search_results.html")
 
     @patch("main.views.Q")
     @patch("main.views.Schedule.objects.filter")
     def test_schedule_q_calls_emp(self, mock_schedule_filter, mock_views_q):
+        self.client.force_login(self.user)
         self.client.get('/schedule/search-results', data=self.data)
         expected_q_calls = [
             call(employee__groups__id="1"),
@@ -56,6 +63,7 @@ class TestScheduleListView(TestCase):
     @patch("main.views.Q")
     @patch("main.views.Schedule.objects.filter")
     def test_schedule_q_calls_no_emp(self, mock_schedule_filter, mock_views_q):
+        self.client.force_login(self.user)
         self.data["employee"] = ""
         self.client.get('/schedule/search-results', data=self.data)
         expected_q_calls = [
