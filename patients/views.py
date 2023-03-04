@@ -71,7 +71,7 @@ class SuccessRegistrationView(LoginRequiredMixin, View):
         return HttpResponseRedirect(reverse("patients:register"))
 
 
-class PatientView(View):
+class PatientView(LoginRequiredMixin, View):
     """
     Display single patient personal information and treatment history.
     """
@@ -99,12 +99,14 @@ class PatientView(View):
 
         patient = get_object_or_404(Patient, id=pk)
         patient_form = PatientForm(
-            request.POST, instance=patient, prefix="patient")
+            request.POST, instance=patient, prefix="patient"
+        )
         address_form = AddressForm(
-            request.POST, instance=patient.address, prefix="address")
+            request.POST, instance=patient.address, prefix="address"
+        )
 
-        if ((patient_form.changed_data or address_form.changed_data) and
-                (address_form.is_valid() and patient_form.is_valid())):
+        if ((patient_form.changed_data or address_form.changed_data)
+                and (address_form.is_valid() and patient_form.is_valid())):
             address_form.save()
             patient_form.save()
             return HttpResponseRedirect(reverse("patients:patient", args=[pk]))
