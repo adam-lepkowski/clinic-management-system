@@ -119,7 +119,7 @@ class PatientView(LoginRequiredMixin, View):
         return render(request, "patients/patient.html", context)
 
 
-class SearchResultsView(ListView):
+class SearchResultsView(LoginRequiredMixin, ListView):
     """
     Display patient search results.
     """
@@ -137,7 +137,9 @@ class SearchResultsView(ListView):
         q = self.request.GET.get("query", None)
         if q:
             data = base.filter(
-                Q(first_name__icontains=q) | Q(last_name__icontains=q) |
-                Q(personal_id__icontains=q))
+                Q(first_name__icontains=q)
+                | Q(last_name__icontains=q)
+                | Q(personal_id__icontains=q)
+            )
             return data
         raise Http404()
