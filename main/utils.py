@@ -62,7 +62,7 @@ def get_day_schedule(schedules):
 
 def _sort_day_schedule_by_hour(appointment):
     """
-    Sort appointments ascending by hour. list sort() method key function.
+    Sort appointments ascending by hour.
     """
 
     return appointment["hour"].strftime("%H:%M")
