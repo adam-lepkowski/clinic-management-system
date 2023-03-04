@@ -29,6 +29,15 @@ class TestRegistrationView(TestCase):
             "patient-phone": "0123456789"
         }
 
+    def test_get_redirects_anonymous_user_to_login(self):
+        response = self.client.get("/patient/register", follow=True)
+        self.assertRedirects(response, "/account/login?next=/patient/register")
+    
+    def test_post_redirects_anonymous_user_to_login(self):
+        data = self.address | self.patient
+        response = self.client.post("/patient/register", data, follow=True)
+        self.assertRedirects(response, "/account/login?next=/patient/register")
+
     def test_registration_valid_forms(self):
         self.client.login(username="test_name", password="test_pw")
         data = self.address | self.patient
