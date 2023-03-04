@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from ..models import Patient, Address
@@ -6,6 +7,11 @@ from ..models import Patient, Address
 class TestRegistrationView(TestCase):
 
     def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_name",
+            email="test@email.com",
+            password="test_pw"
+        )
         self.address = {
             "address-street": "Test Lane",
             "address-number": "12a",
@@ -24,17 +30,20 @@ class TestRegistrationView(TestCase):
         }
 
     def test_registration_valid_forms(self):
+        self.client.login(username="test_name", password="test_pw")
         data = self.address | self.patient
         response = self.client.post("/patient/register", data, follow=True)
         self.assertRedirects(response, "/patient/registered")
 
     def test_registration_valid_forms_sets_session_attr(self):
+        self.client.login(username="test_name", password="test_pw")
         data = self.address | self.patient
         self.client.post("/patient/register", data)
         result = self.client.session.get("patient-registered", False)
         self.assertTrue(result)
 
     def test_registration_invalid_address_form(self):
+        self.client.login(username="test_name", password="test_pw")
         self.address["address-city"] = ""
         data = self.address | self.patient
         response = self.client.post("/patient/register", data, follow=True)
@@ -42,6 +51,7 @@ class TestRegistrationView(TestCase):
         self.assertEqual(len(response.redirect_chain), 0)
 
     def test_registration_invalid_patient_form(self):
+        self.client.login(username="test_name", password="test_pw")
         self.patient["patient-first_name"] = ""
         data = self.address | self.patient
         response = self.client.post("/patient/register", data, follow=True)
