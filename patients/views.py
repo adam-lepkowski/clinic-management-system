@@ -53,7 +53,7 @@ class RegistrationView(LoginRequiredMixin, View):
         return render(request, "patients/register.html", context)
 
 
-class SuccessRegistrationView(View):
+class SuccessRegistrationView(LoginRequiredMixin, View):
     """
     Redirect page after successful patient registration.
     """
