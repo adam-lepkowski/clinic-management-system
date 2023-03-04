@@ -175,6 +175,11 @@ class TestPatientView(TestCase):
 class TestSearchResultsView(TestCase):
 
     def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_name",
+            email="test@email.com",
+            password="test_pw"
+        )
         self.address = Address.objects.create(
             street="Test Lane",
             number="12a",
@@ -193,10 +198,22 @@ class TestSearchResultsView(TestCase):
             address=self.address
         )
 
+    def test_get_redirects_anonymous_user_to_login(self):
+        response = self.client.get(
+            "/patient/search-results?query=test",
+            follow=True
+        )
+        self.assertRedirects(
+            response,
+            "/account/login?next=/patient/search-results?query=test"
+        )
+
     def test_search_result_view(self):
+        self.client.login(username="test_name", password="test_pw")
         response = self.client.get("/patient/search-results?query=test")
         self.assertTemplateUsed(response, "patients/search_results.html")
 
     def test_no_search_data_raises_404(self):
+        self.client.login(username="test_name", password="test_pw")
         response = self.client.get("/patient/search-results")
         self.assertTemplateUsed(response, "404.html")
