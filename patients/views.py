@@ -1,15 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.views.generic import ListView
-from django.db.models import Q
 
 from .forms import PatientForm, AddressForm
 from .models import Patient
 
 
-class RegistrationView(View):
+class RegistrationView(LoginRequiredMixin, View):
     """
     Display patient registration form.
     """
