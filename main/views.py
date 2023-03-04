@@ -3,7 +3,9 @@ import datetime
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from .forms import ScheduleSearchForm
@@ -55,13 +57,16 @@ class ScheduleListView(LoginRequiredMixin, View):
 
     def get(self, request):
         """
-        Search results.
+        Get search results or redirect to schedule search form if ivalid values
+        provided.
         """
 
         spec_id = request.GET.get("specialties")
-        emp_id = request.GET.get("employee", None)
+        emp_id = request.GET.get("employee")
         date = request.GET.get("date")
-        if emp_id:
+        if spec_id is None or date is None:
+            return HttpResponseRedirect(reverse("main:schedule"))
+        elif emp_id:
             schedules = Schedule.objects.filter(
                 Q(employee__groups__id=spec_id)
                 & Q(employee__id=emp_id)
