@@ -1,10 +1,10 @@
 import datetime
 
-from django.shortcuts import render
-from django.views import View
+from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.db.models import Q
+from django.shortcuts import render
+from django.views import View
 
 from .forms import ScheduleSearchForm
 from .models import Schedule
@@ -24,7 +24,7 @@ class MainView(LoginRequiredMixin, View):
         return render(request, "main/index.html")
 
 
-class ScheduleSearchView(View):
+class ScheduleSearchView(LoginRequiredMixin, View):
     """
     Display schedule search form
     """
