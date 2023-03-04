@@ -71,6 +71,11 @@ class TestRegistrationView(TestCase):
 class TestSuccessRegistrationView(TestCase):
 
     def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_name",
+            email="test@email.com",
+            password="test_pw"
+        )
         self.address = {
             "address-street": "Test Lane",
             "address-number": "12a",
@@ -89,6 +94,7 @@ class TestSuccessRegistrationView(TestCase):
         }
 
     def test_redirect_if_no_form_submitted(self):
+        self.client.login(username="test_name", password="test_pw")
         response = self.client.get("/patient/registered", follow=True)
         self.assertFalse(self.client.session.get("patient-registered", False))
         self.assertRedirects(response, "/patient/register")
