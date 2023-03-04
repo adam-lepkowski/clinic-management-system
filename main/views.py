@@ -48,7 +48,7 @@ class ScheduleSearchView(LoginRequiredMixin, View):
         return render(request, "main/schedule.html", context)
 
 
-class ScheduleListView(View):
+class ScheduleListView(LoginRequiredMixin, View):
     """
     Display schedule search results.
     """
@@ -62,12 +62,16 @@ class ScheduleListView(View):
         emp_id = request.GET.get("employee", None)
         date = request.GET.get("date")
         if emp_id:
-            schedules = Schedule.objects.filter(Q(employee__groups__id=spec_id)
-                                                & Q(employee__id=emp_id)
-                                                & Q(date=date))
+            schedules = Schedule.objects.filter(
+                Q(employee__groups__id=spec_id)
+                & Q(employee__id=emp_id)
+                & Q(date=date)
+            )
         else:
-            schedules = Schedule.objects.filter(Q(employee__groups__id=spec_id)
-                                                & Q(date=date))
+            schedules = Schedule.objects.filter(
+                Q(employee__groups__id=spec_id)
+                & Q(date=date)
+            )
 
         context = {
             "date": datetime.datetime.strptime(date, "%Y-%m-%d"),
