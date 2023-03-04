@@ -70,3 +70,8 @@ class TestScheduleListView(TestCase):
             call(employee__groups__id="1"),
             call(date="2023-01-01")]
         self.assertEqual(mock_views_q.call_args_list, expected_q_calls)
+    
+    def test_redirect_when_no_specialty_or_date(self):
+        self.client.force_login(self.user)
+        response = self.client.get("/schedule/search-results", follow=True)
+        self.assertRedirects(response, "/schedule/search")
