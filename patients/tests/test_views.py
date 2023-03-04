@@ -39,20 +39,20 @@ class TestRegistrationView(TestCase):
         self.assertRedirects(response, "/account/login?next=/patient/register")
 
     def test_registration_valid_forms(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         data = self.address | self.patient
         response = self.client.post("/patient/register", data, follow=True)
         self.assertRedirects(response, "/patient/registered")
 
     def test_registration_valid_forms_sets_session_attr(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         data = self.address | self.patient
         self.client.post("/patient/register", data)
         result = self.client.session.get("patient-registered", False)
         self.assertTrue(result)
 
     def test_registration_invalid_address_form(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         self.address["address-city"] = ""
         data = self.address | self.patient
         response = self.client.post("/patient/register", data, follow=True)
@@ -60,7 +60,7 @@ class TestRegistrationView(TestCase):
         self.assertEqual(len(response.redirect_chain), 0)
 
     def test_registration_invalid_patient_form(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         self.patient["patient-first_name"] = ""
         data = self.address | self.patient
         response = self.client.post("/patient/register", data, follow=True)
@@ -94,7 +94,7 @@ class TestSuccessRegistrationView(TestCase):
         }
 
     def test_redirect_if_no_form_submitted(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         response = self.client.get("/patient/registered", follow=True)
         self.assertFalse(self.client.session.get("patient-registered", False))
         self.assertRedirects(response, "/patient/register")
@@ -149,24 +149,24 @@ class TestPatientView(TestCase):
         self.assertRedirects(response, "/account/login?next=/patient/1")
 
     def test_patient_view_get_valid_patient_id(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         response = self.client.get("/patient/1")
         self.assertTemplateUsed(response, "patients/patient.html")
 
     def test_patient_view_get_invalid_patient_id(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         response = self.client.get("/patient/2")
         self.assertTemplateUsed(response, "404.html")
 
     def test_patient_view_post_data_changed(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         self.data["patient-first_name"] = "James"
         self.data["address-city"] = "Test Peaks"
         response = self.client.post("/patient/1", data=self.data)
         self.assertRedirects(response, "/patient/1")
 
     def test_patient_view_post_data_not_changed(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         response = self.client.post("/patient/1", data=self.data, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.redirect_chain), 0)
@@ -209,11 +209,11 @@ class TestSearchResultsView(TestCase):
         )
 
     def test_search_result_view(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         response = self.client.get("/patient/search-results?query=test")
         self.assertTemplateUsed(response, "patients/search_results.html")
 
     def test_no_search_data_raises_404(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         response = self.client.get("/patient/search-results")
         self.assertTemplateUsed(response, "404.html")

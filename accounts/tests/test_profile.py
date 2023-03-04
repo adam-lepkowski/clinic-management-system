@@ -23,7 +23,7 @@ class TestProfileView(TestCase):
         self.assertRedirects(response, "/account/login?next=/account/")
 
     def test_profile_logged_in(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         response = self.client.get("/account/")
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, "accounts/profile.html")

@@ -8,20 +8,20 @@ from ..forms import ScheduleSearchForm
 
 class TestScheduleSearchView(TestCase):
     def setUp(self):
-        User.objects.create_user(
+        self.user = User.objects.create_user(
             username="test_name",
             email="test@email.com",
             password="test_pw"
         )
 
     def test_get(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         response = self.client.get("/schedule/search")
         self.assertIsInstance(response.context["form"], ScheduleSearchForm)
         self.assertTemplateUsed(response, "main/schedule.html")
 
     def test_ajax_get(self):
-        self.client.login(username="test_name", password="test_pw")
+        self.client.force_login(self.user)
         response = self.client.get(
             "/schedule/search",
             HTTP_X_REQUESTED_WITH="XMLHttpRequest"
