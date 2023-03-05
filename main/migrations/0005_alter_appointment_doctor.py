@@ -17,6 +17,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='appointment',
             name='doctor',
-            field=models.ForeignKey(default='DOCTOR REMOVED', on_delete=django.db.models.deletion.SET_DEFAULT, to=settings.AUTH_USER_MODEL, validators=[main.utils.is_physician]),
+            field=models.ForeignKey(default='DOCTOR REMOVED', on_delete=django.db.models.deletion.SET_DEFAULT, to=settings.AUTH_USER_MODEL, validators=[main.validators.is_physician]),
         ),
     ]
