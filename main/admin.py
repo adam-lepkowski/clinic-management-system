@@ -21,7 +21,6 @@ class ScheduleAdmin(admin.ModelAdmin):
         kwargs["form"] = ScheduleModelForm
         return super().get_form(request, obj, **kwargs)
 
-
     def save_model(self, request, obj, form, change):
         """
         Save multiple objects if a date range was selected. One otherwise.
@@ -29,14 +28,14 @@ class ScheduleAdmin(admin.ModelAdmin):
 
         date_from = form.cleaned_data["date"]
         date_to = form.cleaned_data["date_to"]
-        
+
         if date_to and (date_from < date_to):
-                delta = date_to - date_from
-                for _ in range(delta.days + 1):
-                    super().save_model(request, obj, form, change)
-                    date_from += timedelta(days=1)
-                    obj.id += 1
-                    obj.date = date_from
+            delta = date_to - date_from
+            for _ in range(delta.days + 1):
+                super().save_model(request, obj, form, change)
+                date_from += timedelta(days=1)
+                obj.id += 1
+                obj.date = date_from
         else:
             super().save_model(request, obj, form, change)
 
