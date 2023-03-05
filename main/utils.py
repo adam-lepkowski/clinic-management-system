@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from django.core.exceptions import ValidationError
+
 from .const import APPOINTMENT_TIME
 
 
@@ -66,3 +68,12 @@ def _sort_day_schedule_by_hour(appointment):
     """
 
     return appointment["hour"].strftime("%H:%M")
+
+
+def is_physician(employee):
+    """
+    Raise ValidationError if employee is not a physician.
+    """
+
+    if not employee.groups.filter(name__iexact="physician").exists():
+        raise ValidationError("User is not a physician!")
