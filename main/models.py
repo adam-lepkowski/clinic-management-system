@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from patients.models import Patient
+from .utils import is_physician
 
 
 class Schedule(models.Model):
@@ -45,7 +46,8 @@ class Appointment(models.Model):
     doctor = models.ForeignKey(
         User,
         on_delete=models.SET_DEFAULT,
-        default="DOCTOR REMOVED"
+        default="DOCTOR REMOVED",
+        validators=[is_physician]
     )
     purpose = models.CharField(max_length=200, null=False)
     examination = models.TextField(null=True)
