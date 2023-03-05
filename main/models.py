@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -71,3 +72,18 @@ class Appointment(models.Model):
                     "at this datetime!"
             )
         ]
+
+    def clean(self):
+        """
+        Check if user in doctor field is a physician.
+        """
+        employee = User.objects.filter(
+            models.Q(groups__name__iexact="physicians"),
+            id=self.doctor.id
+        )
+        if not employee.exists():
+            raise ValidationError("User is not a physician!")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
