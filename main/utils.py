@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from .const import APPOINTMENT_TIME
@@ -70,10 +71,20 @@ def _sort_day_schedule_by_hour(appointment):
     return appointment["hour"].strftime("%H:%M")
 
 
-def is_physician(employee):
+def is_physician(user_id):
     """
-    Raise ValidationError if employee is not a physician.
+    Raise ValidationError if user is not a physician.
+
+    Parameters
+    ----------
+    user_id : int
+
+    Raises
+    ----------
+    ValidationError
+        If user is not assigned to group "physicians".
     """
 
-    if not employee.groups.filter(name__iexact="physician").exists():
+    user = User.objects.get(pk=user_id)
+    if not user.groups.filter(name__iexact="physicians").exists():
         raise ValidationError("User is not a physician!")
