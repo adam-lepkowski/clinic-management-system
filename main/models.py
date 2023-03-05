@@ -75,14 +75,21 @@ class Appointment(models.Model):
 
     def clean(self):
         """
-        Check if user in doctor field is a physician.
+        Check if user in doctor field is a physician on schedule.
         """
         employee = User.objects.filter(
             models.Q(groups__name__iexact="physicians"),
             id=self.doctor.id
         )
+        schedule = Schedule.objects.filter(
+            models.Q(date=self.datetime),
+            employee__id=self.doctor.id
+        )
+
         if not employee.exists():
             raise ValidationError("User is not a physician!")
+        elif not schedule.exists():
+            raise ValidationError("Doctor not on schedule!")
 
     def save(self, *args, **kwargs):
         self.clean()
