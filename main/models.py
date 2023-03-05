@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from patients.models import Patient
-from .utils import is_physician
+from .validators import is_physician
 
 
 class Schedule(models.Model):
