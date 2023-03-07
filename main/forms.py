@@ -20,7 +20,8 @@ class ScheduleModelForm(forms.ModelForm):
     date_to = forms.DateField(
         label="Date to",
         required=False,
-        widget=forms.SelectDateWidget)
+        widget=forms.SelectDateWidget
+    )
 
     class Meta:
         model = Schedule
@@ -35,7 +36,8 @@ class ScheduleSearchForm(forms.Form):
     specialties = forms.ModelChoiceField(queryset=Group.objects.all())
     date = forms.DateField(widget=forms.Select(choices=AVAILABLE_DATES))
     employee = forms.ModelChoiceField(
-        queryset=User.objects.none(), required=False)
+        queryset=User.objects.none(), required=False
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -43,7 +45,16 @@ class ScheduleSearchForm(forms.Form):
         if "employee" in self.data:
             try:
                 emp_id = int(self.data.get("employee"))
-                self.fields["employee"].queryset = User.objects.filter(id=emp_id)
+                self.fields["employee"].queryset = User.objects.filter(
+                    id=emp_id
+                )
             except (ValueError, TypeError):
                 pass
-        
+
+
+class AppointmentConfirmForm(forms.Form):
+    """
+    Get patient personal ID.
+    """
+
+    personal_id = forms.CharField(max_length=11)
