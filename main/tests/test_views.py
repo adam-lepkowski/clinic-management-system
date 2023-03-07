@@ -70,8 +70,34 @@ class TestScheduleListView(TestCase):
             call(employee__groups__id="1"),
             call(date="2023-01-01")]
         self.assertEqual(mock_views_q.call_args_list, expected_q_calls)
-    
+
     def test_redirect_when_no_specialty_or_date(self):
         self.client.force_login(self.user)
         response = self.client.get("/schedule/search-results", follow=True)
         self.assertRedirects(response, "/schedule/search")
+
+    def test_post_redirects(self):
+        self.client.force_login(self.user)
+        data = {
+            "hour": "08:30",
+            "doctor_id": "1",
+            "date": "2023-01-01"
+        }
+        response = self.client.post(
+            "/schedule/search-results",
+            data=data,
+            follow=True
+        )
+        self.assertRedirects(response, "/appointment/confirm")
+
+    def test_post_saves_data_to_session(self):
+        self.client.force_login(self.user)
+        session = self.client.session
+        data = {
+            "hour": "08:30",
+            "doctor_id": "1",
+            "date": "2023-01-01"
+        }
+        self.client.post("/schedule/search-results", data=data, follow=True)
+        for key in data:
+            self.assertTrue(session[key] == data[key])
