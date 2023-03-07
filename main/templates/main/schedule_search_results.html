@@ -16,8 +16,14 @@ Schedule an appointment
     <h1>{{ date|date:"l, F j, Y" }}</h1>
     {% for appointment in schedule %}
         <div class="spaced-container">
-            <div>{{ appointment.hour|time:"H:i" }} {{ appointment.employee_full_name }} </div>
-            <a href="" class="btn-green">Schedule</a>
+            <div>{{ appointment.hour|time:"H:i" }} {{ appointment.employee_full_name }}</div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="{{ appointment.hour }}" name="hour">
+                <input type="hidden" value="{{ date }}" name="date">
+                <input type="hidden" value="{{ appointment.employee_id }}" name="doctor_id">
+                <button type="submit" class="btn-green">Schedule</button>
+            </form>
         </div>
         <hr class="section-separator">
     {% endfor %}
