@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Confirm appointment
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'forms.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include "includes/navbar.html" %}
+
+<section class="content">
+    <div class="wide-form-container">
+        <h1>Confirm visit</h1>
+        <form id="" action="" method="POST" class="wide-form">
+            {% csrf_token %}
+            {% for field in form %}
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.error }}
+            {% endfor %}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
