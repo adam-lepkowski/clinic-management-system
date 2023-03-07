@@ -84,6 +84,17 @@ class ScheduleListView(LoginRequiredMixin, View):
         }
         return render(request, "main/schedule_search_results.html", context)
 
+    def post(self, request):
+        """
+        Store appointment details in session and redirect to confirmation page.
+        """
+
+        request.session["hour"] = request.POST.get("hour")
+        request.session["date"] = request.POST.get("date")
+        request.session["doctor_id"] = request.POST.get("doctor_id")
+
+        return HttpResponseRedirect(reverse("main:confirm_appointment"))
+
 
 class AppointmentConfirmView(LoginRequiredMixin, View):
     """
