@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from .forms import ScheduleSearchForm
+from .forms import ScheduleSearchForm, AppointmentConfirmForm
 from .models import Schedule
 from .utils import get_day_schedule
 
@@ -83,3 +83,23 @@ class ScheduleListView(LoginRequiredMixin, View):
             "schedule": get_day_schedule(schedules)
         }
         return render(request, "main/schedule_search_results.html", context)
+
+
+class AppointmentConfirmView(LoginRequiredMixin, View):
+    """
+    Select a patient and confirm appointment.
+    """
+
+    def get(self, request):
+        """
+        Display confirmation form.
+        """
+
+        form = AppointmentConfirmForm(label_suffix="")
+        context = {
+            "form": form
+        }
+        return render(request, "main/appointment_confirm.html", context)
+
+    def post(self, request):
+        pass
