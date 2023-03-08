@@ -19,8 +19,8 @@ Schedule an appointment
             <div>{{ appointment.hour|time:"H:i" }} {{ appointment.employee_full_name }}</div>
             <form action="" method="POST">
                 {% csrf_token %}
-                <input type="hidden" value="{{ appointment.hour }}" name="hour">
-                <input type="hidden" value="{{ date }}" name="date">
+                <input type="hidden" value='{{ appointment.hour|time:"H:i" }}' name="hour">
+                <input type="hidden" value='{{ date|date:"Y-m-d" }}' name="date">
                 <input type="hidden" value="{{ appointment.employee_id }}" name="doctor_id">
                 <button type="submit" class="btn-green">Schedule</button>
             </form>
