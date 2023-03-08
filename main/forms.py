@@ -54,7 +54,8 @@ class ScheduleSearchForm(forms.Form):
 
 class AppointmentConfirmForm(forms.Form):
     """
-    Get patient personal ID.
+    Get patient personal ID and visit purpose.
     """
 
     personal_id = forms.CharField(max_length=11)
+    purpose = forms.CharField(max_length=200, widget=forms.Textarea)
