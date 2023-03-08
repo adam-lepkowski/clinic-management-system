@@ -94,3 +94,7 @@ class Appointment(models.Model):
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
+    
+    def __str__(self):
+        datetime_string = self.datetime.strftime("%Y-%m-%d %H:%M")
+        return f"{datetime_string} {self.doctor} {self.patient}"
