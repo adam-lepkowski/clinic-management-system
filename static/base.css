@@ -179,3 +179,16 @@ h6 {
     flex-direction: row;
     justify-content: space-between;
 }
+
+/*
+    Errorlist   
+*/
+.errorlist {
+    list-style: none;
+    padding: 0;
+}
+
+.errorlist li {
+    color: #C87972;
+    display: block;
+}
