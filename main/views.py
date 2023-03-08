@@ -1,6 +1,7 @@
 import datetime
 
 from django.db.models import Q
+from django.db.utils import IntegrityError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -9,8 +10,9 @@ from django.urls import reverse
 from django.views import View
 
 from .forms import ScheduleSearchForm, AppointmentConfirmForm
-from .models import Schedule
+from .models import Schedule, Appointment
 from .utils import get_day_schedule
+from patients.models import Patient
 
 
 class MainView(LoginRequiredMixin, View):
@@ -113,4 +115,38 @@ class AppointmentConfirmView(LoginRequiredMixin, View):
         return render(request, "main/appointment_confirm.html", context)
 
     def post(self, request):
-        pass
+        """
+        Confirm appointment and redirect if valid. Display errors otherwise.
+        """
+
+        form = AppointmentConfirmForm(request.POST)
+        context = {
+            "form": form
+        }
+
+        if form.is_valid():
+            personal_id = form.cleaned_data["personal_id"]
+            date_string = request.session.get("date")
+            date = datetime.datetime.strptime(date_string, "%Y-%m-%d").date()
+            time_string = request.session.get("hour")
+            time = datetime.datetime.strptime(time_string, "%H:%M").time()
+            appointment_datetime = datetime.datetime.combine(date, time)
+            doctor_id = request.session.get("doctor_id")
+            doctor = User.objects.get(pk=doctor_id)
+            patient = Patient.objects.get(personal_id=personal_id)
+            try:
+                appointment = Appointment(
+                    datetime=appointment_datetime,
+                    patient=patient,
+                    doctor=doctor,
+                    purpose=form.cleaned_data["purpose"]
+                )
+                appointment.save()
+            except IntegrityError as e:
+                context["error"] = str(e)
+                return render(request, "main/appointment_confirm.html", context)
+
+            return HttpResponseRedirect(reverse("main:main"))
+
+        else:
+            return render(request, "main/appointment_confirm.html", context)
