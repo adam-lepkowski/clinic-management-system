@@ -112,6 +112,10 @@ class TestAppointmentConfirmView(TestCase):
             email="test@email.com",
             password="test_pw"
         )
+        self.post_data = {
+            "personal_id": "12345678911",
+            "purpose": "lorem ipsum"
+        }
 
     def test_get(self):
         self.client.force_login(self.user)
@@ -121,11 +125,10 @@ class TestAppointmentConfirmView(TestCase):
     @patch("main.views.AppointmentConfirmForm.is_valid", return_value=False)
     def test_post_invalid_post_data_returns_same_page(self, mock_is_valid):
         self.client.force_login(self.user)
-        post_data = {
-            "personal_id": "lorem ipsum lorem ipsum",
-            "purpose": "lorem ipsum"
-        }
-        response = self.client.post("/appointment/confirm", data=post_data)
+        response = self.client.post(
+            "/appointment/confirm",
+            data=self.post_data
+        )
         self.assertTemplateUsed(response, "main/appointment_confirm.html")
 
     @patch("main.views.Patient")
@@ -135,10 +138,6 @@ class TestAppointmentConfirmView(TestCase):
     def test_valid_post_data(self, mock_save, mock_datetime,
                              mock_user, mock_patient):
         self.client.force_login(self.user)
-        post_data = {
-            "personal_id": "12345678911",
-            "purpose": "lorem ipsum"
-        }
         session = self.client.session
         session["hour"] = "08:30"
         session["date"] = "2023-01-01"
@@ -146,7 +145,7 @@ class TestAppointmentConfirmView(TestCase):
         session.save()
         response = self.client.post(
             "/appointment/confirm",
-            data=post_data,
+            data=self.post_data,
             follow=True
         )
         self.assertRedirects(response, "/")
