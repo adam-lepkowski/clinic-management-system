@@ -149,3 +149,12 @@ class TestAppointmentConfirmView(TestCase):
             follow=True
         )
         self.assertRedirects(response, "/")
+
+    def test_invalid_patient_id_returns_same_page_with_error(self):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            "/appointment/confirm",
+            data=self.post_data
+        )
+        self.assertTemplateUsed(response, "main/appointment_confirm.html")
+        self.assertEqual(response.context["error"], "Invalid patient id")
