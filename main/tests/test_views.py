@@ -123,7 +123,7 @@ class TestAppointmentConfirmView(TestCase):
         self.assertTemplateUsed(response, "main/appointment_confirm.html")
 
     @patch("main.views.AppointmentConfirmForm.is_valid", return_value=False)
-    def test_post_invalid_post_data_returns_same_page(self, mock_is_valid):
+    def test_post_invalid_form_returns_same_page(self, mock_is_valid):
         self.client.force_login(self.user)
         response = self.client.post(
             "/appointment/confirm",
