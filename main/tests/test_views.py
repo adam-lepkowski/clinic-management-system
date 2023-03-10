@@ -139,6 +139,11 @@ class TestAppointmentConfirmView(TestCase):
             "personal_id": "12345678911",
             "purpose": "lorem ipsum"
         }
+        session = self.client.session
+        session["hour"] = "08:30"
+        session["date"] = "2023-01-01"
+        session["doctor_id"] = "1"
+        session.save()
         response = self.client.post(
             "/appointment/confirm",
             data=post_data,
