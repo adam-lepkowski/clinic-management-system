@@ -117,8 +117,13 @@ class TestAppointmentConfirmView(TestCase):
             "purpose": "lorem ipsum"
         }
 
-    def test_get(self):
+    def test_get_valid_session(self):
         self.client.force_login(self.user)
+        session = self.client.session
+        session["hour"] = "08:30"
+        session["date"] = "2023-01-01"
+        session["doctor_id"] = "1"
+        session.save()
         response = self.client.get("/appointment/confirm")
         self.assertTemplateUsed(response, "main/appointment_confirm.html")
 

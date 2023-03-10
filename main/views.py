@@ -105,8 +105,17 @@ class AppointmentConfirmView(LoginRequiredMixin, View):
 
     def get(self, request):
         """
-        Display confirmation form.
+        Display confirmation form or redirect to schedule form if no valid
+        session data found.
         """
+
+        date_string = request.session.get("date")
+        time_string = request.session.get("hour")
+        doctor_id = request.session.get("doctor_id")
+        if (date_string is None
+                or time_string is None
+                or doctor_id is None):
+            return HttpResponseRedirect(reverse("main:schedule"))
 
         form = AppointmentConfirmForm(label_suffix="")
         context = {
@@ -131,7 +140,7 @@ class AppointmentConfirmView(LoginRequiredMixin, View):
             except Patient.DoesNotExist as e:
                 context["error"] = "Invalid patient id"
                 return render(request, "main/appointment_confirm.html", context)
-           
+
             date_string = request.session.get("date")
             time_string = request.session.get("hour")
             doctor_id = request.session.get("doctor_id")
@@ -140,7 +149,7 @@ class AppointmentConfirmView(LoginRequiredMixin, View):
                     or doctor_id is None):
                 context["error"] = "Fill out schedule form first."
                 return render(request, "main/appointment_confirm.html", context)
-            
+
             try:
                 doctor = User.objects.get(pk=doctor_id)
             except User.DoesNotExist as e:
