@@ -127,6 +127,11 @@ class TestAppointmentConfirmView(TestCase):
         response = self.client.get("/appointment/confirm")
         self.assertTemplateUsed(response, "main/appointment_confirm.html")
 
+    def test_get_invalid_session_redirects_to_schedule_form(self):
+        self.client.force_login(self.user)
+        response = self.client.get("/appointment/confirm")
+        self.assertRedirects(response, "/schedule/search")
+
     @patch("main.views.AppointmentConfirmForm.is_valid", return_value=False)
     def test_post_invalid_form_returns_same_page(self, mock_is_valid):
         self.client.force_login(self.user)
