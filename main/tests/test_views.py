@@ -3,6 +3,7 @@ from unittest.mock import patch, call
 from django.contrib.auth.models import User
 from django.test import TestCase
 
+from patients.models import Patient
 from ..forms import ScheduleSearchForm
 
 
@@ -101,3 +102,46 @@ class TestScheduleListView(TestCase):
         self.client.post("/schedule/search-results", data=data, follow=True)
         for key in data:
             self.assertTrue(session[key] == data[key])
+
+
+class TestAppointmentConfirmView(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_name",
+            email="test@email.com",
+            password="test_pw"
+        )
+
+    def test_get(self):
+        self.client.force_login(self.user)
+        response = self.client.get("/appointment/confirm")
+        self.assertTemplateUsed(response, "main/appointment_confirm.html")
+
+    @patch("main.views.AppointmentConfirmForm.is_valid", return_value=False)
+    def test_post_invalid_post_data_returns_same_page(self, mock_is_valid):
+        self.client.force_login(self.user)
+        post_data = {
+            "personal_id": "lorem ipsum lorem ipsum",
+            "purpose": "lorem ipsum"
+        }
+        response = self.client.post("/appointment/confirm", data=post_data)
+        self.assertTemplateUsed(response, "main/appointment_confirm.html")
+
+    @patch("main.views.Patient")
+    @patch("main.views.User")
+    @patch("main.views.datetime")
+    @patch("main.views.Appointment")
+    def test_valid_post_data(self, mock_save, mock_datetime,
+                             mock_user, mock_patient):
+        self.client.force_login(self.user)
+        post_data = {
+            "personal_id": "12345678911",
+            "purpose": "lorem ipsum"
+        }
+        response = self.client.post(
+            "/appointment/confirm",
+            data=post_data,
+            follow=True
+        )
+        self.assertRedirects(response, "/")
