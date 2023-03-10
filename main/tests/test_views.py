@@ -158,3 +158,18 @@ class TestAppointmentConfirmView(TestCase):
         )
         self.assertTemplateUsed(response, "main/appointment_confirm.html")
         self.assertEqual(response.context["error"], "Invalid patient id")
+
+    @patch("main.views.Patient")
+    @patch("main.views.AppointmentConfirmForm")
+    def test_invalid_session_data_returns_same_page_with_error(
+            self, mock_appointment_form, mock_patient):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            "/appointment/confirm",
+            data=self.post_data
+        )
+        self.assertTemplateUsed(response, "main/appointment_confirm.html")
+        self.assertEqual(
+            response.context["error"],
+            "Fill out schedule form first."
+        )
