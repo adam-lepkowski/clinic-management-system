@@ -126,14 +126,30 @@ class AppointmentConfirmView(LoginRequiredMixin, View):
 
         if form.is_valid():
             personal_id = form.cleaned_data["personal_id"]
+            try:
+                patient = Patient.objects.get(personal_id=personal_id)
+            except Patient.DoesNotExist as e:
+                context["error"] = "Invalid patient id"
+                return render(request, "main/appointment_confirm.html", context)
+           
             date_string = request.session.get("date")
-            date = datetime.datetime.strptime(date_string, "%Y-%m-%d").date()
             time_string = request.session.get("hour")
+            doctor_id = request.session.get("doctor_id")
+            if (date_string is None
+                    or time_string is None
+                    or doctor_id is None):
+                context["error"] = "Fill out schedule form first."
+                return render(request, "main/appointment_confirm.html", context)
+            
+            try:
+                doctor = User.objects.get(pk=doctor_id)
+            except User.DoesNotExist as e:
+                context["error"] = "Invalid doctor ID"
+                return render(request, "main/appointment_confirm.html", context)
+
+            date = datetime.datetime.strptime(date_string, "%Y-%m-%d").date()
             time = datetime.datetime.strptime(time_string, "%H:%M").time()
             appointment_datetime = datetime.datetime.combine(date, time)
-            doctor_id = request.session.get("doctor_id")
-            doctor = User.objects.get(pk=doctor_id)
-            patient = Patient.objects.get(personal_id=personal_id)
             try:
                 appointment = Appointment(
                     datetime=appointment_datetime,
