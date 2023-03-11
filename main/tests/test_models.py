@@ -82,7 +82,7 @@ class TestAppointment(TestCase):
                 took_place=False
             )
 
-    def test_appointment_with__doctor_not_on_schedule_not_possible(self):
+    def test_appointment_with_doctor_not_on_schedule_not_possible(self):
         doctor = User.objects.create_user(
             username="TestUserNotADoctor",
             first_name="NotDoctor",
@@ -101,3 +101,29 @@ class TestAppointment(TestCase):
                 prescription=None,
                 took_place=False
             )
+
+    def test_add_appointment(self):
+        doctor = User.objects.create_user(
+            username="Doctor",
+            first_name="Doctor",
+            last_name="Doctorly"
+        )
+        doctor.groups.add(self.physicians_group)
+        Schedule.objects.create(
+            date=timezone.now(),
+            start="08:00",
+            end="16:00",
+            employee=doctor
+        )
+        Appointment.objects.create(
+            datetime=timezone.now(),
+            patient=self.patient,
+            doctor=doctor,
+            purpose="Toothache",
+            examination=None,
+            diagnosis=None,
+            advice=None,
+            prescription=None,
+            took_place=None
+        )
+        self.assertEqual(len(Appointment.objects.all()), 1)
