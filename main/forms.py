@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from django import forms
 from django.contrib.auth.models import Group, User
 
-from .models import Schedule
+from .models import Schedule, Appointment
 
 
 AVAILABLE_DATES = [date.today() + timedelta(days=i) for i in range(7)]
@@ -59,3 +59,20 @@ class AppointmentConfirmForm(forms.Form):
 
     personal_id = forms.CharField(max_length=11)
     purpose = forms.CharField(max_length=200, widget=forms.Textarea)
+
+
+class AppointmentModelForm(forms.ModelForm):
+    """
+    View scheduled appointment details.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["doctor"].disabled = True
+        self.fields["patient"].disabled = True
+        self.fields["datetime"].disabled = True
+        self.fields["prescription"].required = False
+
+    class Meta:
+        model = Appointment
+        fields = "__all__"
