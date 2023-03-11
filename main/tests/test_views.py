@@ -203,3 +203,28 @@ class TestAppointmentConfirmView(TestCase):
             response.context["error"],
             "Invalid doctor ID"
         )
+
+
+class TestMainView(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_name",
+            email="test@email.com",
+            password="test_pw"
+        )
+
+    def test_get_no_appointment_without_form_in_context(self):
+        self.client.force_login(self.user)
+        response = self.client.get("/")
+        self.assertTemplateUsed(response, "main/index.html")
+        self.assertIsNone(response.context.get("form"))
+
+    @patch("main.views.AppointmentModelForm")
+    @patch("main.views.Appointment")
+    def test_get_appointment_form_in_context(
+            self, mock_appointment, mock_appointment_form):
+        self.client.force_login(self.user)
+        response = self.client.get("/")
+        self.assertTemplateUsed(response, "main/index.html")
+        self.assertIsNotNone(response.context.get("form"))
