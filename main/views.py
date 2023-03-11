@@ -9,7 +9,9 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from .forms import ScheduleSearchForm, AppointmentConfirmForm
+from .forms import (
+    ScheduleSearchForm, AppointmentConfirmForm, AppointmentModelForm
+)
 from .models import Schedule, Appointment
 from .utils import get_day_schedule
 from patients.models import Patient
@@ -25,6 +27,19 @@ class MainView(LoginRequiredMixin, View):
         Render main page.
         """
 
+        doctor = self.request.user
+        appointments = Appointment.objects.filter(
+            Q(doctor=doctor)
+            & Q(took_place=None)).order_by("datetime")
+        if appointments:
+            form = AppointmentModelForm(
+                instance=appointments[0],
+                label_suffix=""
+            )
+            context = {
+                "form": form
+            }
+            return render(request, "main/index.html", context)
         return render(request, "main/index.html")
 
 
