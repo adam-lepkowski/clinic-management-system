@@ -55,7 +55,7 @@ class Appointment(models.Model):
     diagnosis = models.CharField(max_length=250, null=True)
     advice = models.TextField(null=True)
     prescription = models.TextField(null=True)
-    took_place = models.BooleanField(default=False)
+    took_place = models.BooleanField(null=True)
 
     class Meta:
         constraints = [
