@@ -35,10 +35,13 @@ class TestGetAppointmentTimes(TestCase):
 
 class TestGetDaySchedule(TestCase):
 
+    @patch("main.utils.is_appointment_available", return_value=True)
     @patch("main.utils._sort_day_schedule_by_hour", return_value=["10", "8", "9"])
     @patch("main.models.Schedule")
     @patch("main.utils.get_appointment_times", return_value=["8", "9", "10"])
-    def test_get_day_schedule(self, mock_appointments, mock_schedule, mock_sort_hour):
+    def test_get_day_schedule(
+            self, mock_appointments, mock_schedule, mock_sort_hour,
+            mock_is_appointment_available):
         mock_schedule.emp_full_name.return_value = "Teston Testingly"
         mock_schedule.employee.id = "1"
         mock_schedule.date = "2023-01-01"
@@ -63,6 +66,16 @@ class TestGetDaySchedule(TestCase):
         ]
         self.assertEqual(expected, result)
 
+    @patch("main.utils.is_appointment_available", return_value=False)
+    @patch("main.models.Schedule")
+    @patch("main.utils.get_appointment_times", return_value=["8", "9", "10"])
+    def test_get_day_schedule_appointment_unavailable(
+            self, mock_appointments, mock_schedule,
+            mock_is_appointment_available):
+        expected = []
+        result = get_day_schedule([mock_schedule])
+        self.assertEqual(expected, result)
+
 
 class TestGetNextAppointment(TestCase):
 
@@ -80,13 +93,13 @@ class TestGetNextAppointment(TestCase):
 
 
 class TestIsAppointmentAvailable(TestCase):
-    
+
     @patch("main.utils.Appointment.objects")
     def test_appointment_available(self, mock_appointment):
         mock_appointment.filter.return_value = False
         result = is_appointment_available("1", date(2023, 1, 1), time(8, 30))
         self.assertTrue(result)
-    
+
     @patch("main.utils.Appointment.objects")
     def test_appointment_not_available(self, mock_appointment):
         mock_appointment.filter.return_value = True
