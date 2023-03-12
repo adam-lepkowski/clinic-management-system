@@ -13,7 +13,7 @@ from .forms import (
     ScheduleSearchForm, AppointmentConfirmForm, AppointmentModelForm
 )
 from .models import Schedule, Appointment
-from .utils import get_day_schedule
+from .utils import get_day_schedule, get_next_appointment
 from patients.models import Patient
 
 
@@ -28,12 +28,10 @@ class MainView(LoginRequiredMixin, View):
         """
 
         doctor = self.request.user
-        appointments = Appointment.objects.filter(
-            Q(doctor=doctor)
-            & Q(took_place=None)).order_by("datetime")
-        if appointments:
+        appointment = get_next_appointment(doctor)
+        if appointment:
             form = AppointmentModelForm(
-                instance=appointments[0],
+                instance=appointment,
                 label_suffix=""
             )
             context = {
