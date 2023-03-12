@@ -39,7 +39,7 @@ def get_day_schedule(schedules):
     Parameters
     ----------
     schedules : list
-                Contains Schedule objects.
+        contains Schedule objects.
 
     Returns
     ----------
@@ -54,12 +54,13 @@ def get_day_schedule(schedules):
     for schedule in schedules:
         available_hours = get_appointment_times(schedule)
         for hour in available_hours:
-            appointment_details = {
-                "employee_id": schedule.employee.id,
-                "employee_full_name": schedule.emp_full_name(),
-                "date": schedule.date,
-                "hour": hour}
-            day_schedule_by_available_hours.append(appointment_details)
+            if is_appointment_available(schedule.employee, schedule.date, hour):
+                appointment_details = {
+                    "employee_id": schedule.employee.id,
+                    "employee_full_name": schedule.emp_full_name(),
+                    "date": schedule.date,
+                    "hour": hour}
+                day_schedule_by_available_hours.append(appointment_details)
     return sorted(day_schedule_by_available_hours, key=_sort_day_schedule_by_hour)
 
 
@@ -106,7 +107,7 @@ def is_appointment_available(doctor, date, hour):
         appointment date
     hour : datetime.time
         appointment time
-    
+
     Returns
     ----------
     bool
