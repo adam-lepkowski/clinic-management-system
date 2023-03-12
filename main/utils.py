@@ -92,3 +92,33 @@ def get_next_appointment(doctor):
     if appointments:
         return appointments[0]
     return None
+
+
+def is_appointment_available(doctor, date, hour):
+    """
+    Check if a doctor has no appointments scheduled at given datetime.
+
+    Parameters
+    ----------
+    doctor : User
+        user assigned to physicians group
+    date : datetime.date
+        appointment date
+    hour : datetime.time
+        appointment time
+    
+    Returns
+    ----------
+    bool
+        True if datetime free to schedule, False otherwise.
+    """
+
+    appointment_datetime = datetime.combine(date, hour)
+    scheduled_appointment = Appointment.objects.filter(
+        Q(doctor=doctor)
+        & Q(datetime=appointment_datetime)
+    )
+
+    if scheduled_appointment:
+        return False
+    return True
