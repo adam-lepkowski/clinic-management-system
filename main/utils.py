@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 from .const import APPOINTMENT_TIME
+from .models import Appointment
 
 
 def get_appointment_times(schedule):
@@ -69,3 +69,26 @@ def _sort_day_schedule_by_hour(appointment):
     """
 
     return appointment["hour"].strftime("%H:%M")
+
+
+def get_next_appointment(doctor):
+    """
+    Return doctors next appointment or None if there isn't one.
+
+    Parameters
+    ----------
+    doctor : User
+        user assigned to physicians group
+
+    Returns
+    ----------
+    Appointment or None
+        doctors next appointment or None if there isn't one
+    """
+
+    appointments = Appointment.objects.filter(
+        Q(doctor=doctor)
+        & Q(took_place=None)).order_by("datetime")
+    if appointments:
+        return appointments[0]
+    return None
