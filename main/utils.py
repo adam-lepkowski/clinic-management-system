@@ -115,6 +115,10 @@ def is_appointment_available(doctor, date, hour):
     """
 
     appointment_datetime = datetime.combine(date, hour)
+
+    if appointment_datetime < datetime.now():
+        return False
+
     scheduled_appointment = Appointment.objects.filter(
         Q(doctor=doctor)
         & Q(datetime=appointment_datetime)
