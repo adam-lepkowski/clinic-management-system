@@ -40,6 +40,40 @@ class MainView(LoginRequiredMixin, View):
             return render(request, "main/index.html", context)
         return render(request, "main/index.html")
 
+    def post(self, request):
+        """
+        Update appointment details and display the next one if form is valid.
+        Display error messages otherwise.
+        """
+
+        doctor = self.request.user
+        datetime = self.request.POST.get("datetime")
+        appointments = Appointment.objects.filter(
+            Q(doctor=doctor)
+            & Q(datetime=datetime)
+        )
+
+        form = AppointmentModelForm(request.POST, instance=appointments[0])
+
+        if form.is_valid():
+            form.save()
+            doctor = self.request.user
+            next_appointment = get_next_appointment(doctor)
+            if next_appointment:
+                new_form = AppointmentModelForm(
+                    instance=next_appointment,
+                    label_suffix=""
+                )
+                context = {
+                    "form": new_form
+                }
+                return render(request, "main/index.html", context)
+            return render(request, "main/index.html")
+        context = {
+            "form": form
+        }
+        return render(request, "main/index.html", context)
+
 
 class ScheduleSearchView(LoginRequiredMixin, View):
     """
