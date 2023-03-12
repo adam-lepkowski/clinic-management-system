@@ -14,6 +14,17 @@
 
 <section class="content">
     {% include 'patients/includes/patient_form.html' %}
+    <h2 class="section-heading">Treatment history</h2>
+    <hr class="section-separator">
+    <div class="narrow-form">
+        {% for appointment in treatment_history %}
+        <div class="narrow-row">
+            {{ appointment.datetime|date:"D d m Y H:i" }} {{ appointment.doctor.first_name|title }} {{ appointment.doctor.last_name|title }}
+            <a href="{{ appointment.get_absolute_url }}" class="btn-green">View</a>
+        </div>
+        <hr class="section-separator">
+        {% endfor %}
+    </div>
 </section>
 
 <script src="{% static 'patients/patients.js' %}"></script>
