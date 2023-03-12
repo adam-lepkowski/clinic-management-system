@@ -70,9 +70,11 @@ class AppointmentModelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["doctor"].disabled = True
         self.fields["patient"].disabled = True
-        self.fields["datetime"].disabled = True
         self.fields["prescription"].required = False
 
     class Meta:
         model = Appointment
         fields = "__all__"
+        widgets = {
+            "datetime": forms.TextInput(attrs={"readonly": True})
+        }
