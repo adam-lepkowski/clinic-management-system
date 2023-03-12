@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
 from patients.models import Patient
 from .validators import is_physician
@@ -91,10 +92,13 @@ class Appointment(models.Model):
         elif not schedule.exists():
             raise ValidationError("Doctor not on schedule!")
 
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)
-    
     def __str__(self):
         datetime_string = self.datetime.strftime("%Y-%m-%d %H:%M")
         return f"{datetime_string} {self.doctor} {self.patient}"
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("main:appointment", args=[self.id])
