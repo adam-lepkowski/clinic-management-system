@@ -25,5 +25,10 @@ urlpatterns = [
         "appointment/confirm",
         views.AppointmentConfirmView.as_view(),
         name="confirm_appointment"
+    ),
+    path(
+        "appointment/<int:pk>",
+        views.AppointmentView.as_view(),
+        name="appointment"
     )
 ]
