@@ -295,3 +295,23 @@ class TestAppointmentView(TestCase):
         self.client.force_login(self.user)
         response = self.client.get("/appointment/1")
         self.assertTemplateUsed(response, "main/appointment.html")
+
+    @patch("main.views.AppointmentModelForm")
+    @patch("main.views.get_object_or_404")
+    def test_post_valid_redirects(self, mock_404, mock_appointment_form):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            "/appointment/1", data={"data":"data"}, follow=True
+        )
+        self.assertRedirects(response, "/appointment/1")
+
+    @patch("main.views.AppointmentModelForm.is_valid", return_value=False)
+    @patch("main.views.get_object_or_404")
+    def test_post_invalid_returns_same_page(self, mock_404, mock_is_valid):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            "/appointment/1", data={"data":"data"}, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "main/appointment.html")
+
