@@ -8,6 +8,7 @@ from django.views.generic import ListView
 
 from .forms import PatientForm, AddressForm
 from .models import Patient
+from main.models import Appointment
 
 
 class RegistrationView(LoginRequiredMixin, View):
@@ -84,10 +85,13 @@ class PatientView(LoginRequiredMixin, View):
         patient = get_object_or_404(Patient, id=pk)
         patient_form = PatientForm(instance=patient, prefix="patient")
         address_form = AddressForm(instance=patient.address, prefix="address")
+        treatment_history = Appointment.objects.filter(
+            patient=patient).order_by("datetime")
         context = {
             "patient_form": patient_form,
             "address_form": address_form,
-            "mode": "Update"
+            "mode": "Update",
+            "treatment_history": treatment_history
         }
         return render(request, "patients/patient.html", context)
 
