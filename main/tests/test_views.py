@@ -3,7 +3,6 @@ from unittest.mock import patch, call
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from patients.models import Patient
 from ..forms import ScheduleSearchForm
 
 
@@ -220,10 +219,12 @@ class TestMainView(TestCase):
         self.assertTemplateUsed(response, "main/index.html")
         self.assertIsNone(response.context.get("form"))
 
+    @patch("main.views.get_next_appointment", return_value=True)
     @patch("main.views.AppointmentModelForm")
     @patch("main.views.Appointment")
     def test_get_appointment_form_in_context(
-            self, mock_appointment, mock_appointment_form):
+            self, mock_appointment, mock_appointment_form,
+            mock_next_appointment):
         self.client.force_login(self.user)
         response = self.client.get("/")
         self.assertTemplateUsed(response, "main/index.html")
