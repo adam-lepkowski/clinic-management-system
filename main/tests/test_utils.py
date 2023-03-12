@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, time, date
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, MagicMock
 
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -94,14 +94,34 @@ class TestGetNextAppointment(TestCase):
 
 class TestIsAppointmentAvailable(TestCase):
 
+    def setUp(self):
+        self.comparison_magic_mock = MagicMock()
+        self.comparison_magic_mock.__lt__.return_value = False
+
+    @patch("main.utils.datetime")
     @patch("main.utils.Appointment.objects")
-    def test_appointment_available(self, mock_appointment):
+    def test_appointment_available(self, mock_appointment, mock_datetime):
+        mock_datetime.now.return_value = self.comparison_magic_mock
+        mock_datetime.combine.return_value = self.comparison_magic_mock
         mock_appointment.filter.return_value = False
         result = is_appointment_available("1", date(2023, 1, 1), time(8, 30))
         self.assertTrue(result)
 
+    @patch("main.utils.datetime")
     @patch("main.utils.Appointment.objects")
-    def test_appointment_not_available(self, mock_appointment):
+    def test_appointment_not_available(self, mock_appointment, mock_datetime):
+        mock_datetime.now.return_value = self.comparison_magic_mock
+        mock_datetime.combine.return_value = self.comparison_magic_mock
         mock_appointment.filter.return_value = True
+        result = is_appointment_available("1", date(2023, 1, 1), time(8, 30))
+        self.assertFalse(result)
+
+    @patch("main.utils.datetime")
+    @patch("main.utils.Appointment.objects")
+    def test_appointment_datetime_less_than_now(
+            self, mock_appointment, mock_datetime):
+        self.comparison_magic_mock.__lt__.return_value = True
+        mock_datetime.now.return_value = self.comparison_magic_mock
+        mock_datetime.combine.return_value = self.comparison_magic_mock
         result = is_appointment_available("1", date(2023, 1, 1), time(8, 30))
         self.assertFalse(result)
