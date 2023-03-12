@@ -9,7 +9,6 @@
 {% include "includes/navbar.html" %}
 
 <section class="content">
-    <h1>FORM</h1>
     {% if form %}
         <form action="" method="POST" class="wide-form">
             {% csrf_token %}
@@ -20,6 +19,8 @@
             {% endfor %}
             <button type="submit">Submit</button>
         </form>
+    {% else %}
+        <h1>No appointments scheduled for today.</h1>
     {% endif %}
 </section>
 
