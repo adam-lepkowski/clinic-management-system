@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time, date
 from unittest.mock import patch, Mock
 
 from django.test import TestCase
@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 from ..models import Schedule, Appointment
 from ..utils import (get_appointment_times, get_day_schedule,
-                     get_next_appointment)
+                     get_next_appointment, is_appointment_available)
 from ..const import APPOINTMENT_TIME
 
 
@@ -73,7 +73,22 @@ class TestGetNextAppointment(TestCase):
         expected = 1
         result = get_next_appointment("user")
         self.assertEqual(expected, result)
-    
+
     def test_get_appointment_returns_none(self):
         result = get_next_appointment(1)
         self.assertIsNone(result)
+
+
+class TestIsAppointmentAvailable(TestCase):
+    
+    @patch("main.utils.Appointment.objects")
+    def test_appointment_available(self, mock_appointment):
+        mock_appointment.filter.return_value = False
+        result = is_appointment_available("1", date(2023, 1, 1), time(8, 30))
+        self.assertTrue(result)
+    
+    @patch("main.utils.Appointment.objects")
+    def test_appointment_not_available(self, mock_appointment):
+        mock_appointment.filter.return_value = True
+        result = is_appointment_available("1", date(2023, 1, 1), time(8, 30))
+        self.assertFalse(result)
