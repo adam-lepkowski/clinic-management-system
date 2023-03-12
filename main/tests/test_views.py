@@ -272,3 +272,26 @@ class TestMainView(TestCase):
         response = self.client.post("/", data=self.data)
         self.assertTemplateUsed(response, "main/index.html")
         self.assertIsNotNone(response.context.get("form"))
+
+
+class TestAppointmentView(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_name",
+            email="test@email.com",
+            password="test_pw"
+        )
+
+    def test_get_no_appointment(self):
+        self.client.force_login(self.user)
+        response = self.client.get("/appointment/1")
+        self.assertTemplateUsed(response, "404.html")
+
+    @patch("main.views.Appointment")
+    @patch("main.views.AppointmentModelForm")
+    @patch("main.views.get_object_or_404")
+    def test_get(self, mock_404, mock_appointment_form, mock_appointment):
+        self.client.force_login(self.user)
+        response = self.client.get("/appointment/1")
+        self.assertTemplateUsed(response, "main/appointment.html")
