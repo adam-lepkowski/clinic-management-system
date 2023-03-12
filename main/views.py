@@ -240,3 +240,21 @@ class AppointmentView(LoginRequiredMixin, View):
             "form": form
         }
         return render(request, "main/appointment.html", context)
+
+    def post(self, request, pk):
+        """
+        Update appointment details and display them imidiately on success.
+        Display page with errors otherwise.
+        """
+
+        appointment = get_object_or_404(Appointment, id=pk)
+        form = AppointmentModelForm(request.POST, instance=appointment)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("main:appointment", args=[pk]))
+
+        context = {
+            "form": form
+        }
+        return render(request, "main/appointment.html", context)
