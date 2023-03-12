@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from ..models import Schedule
-from ..utils import get_appointment_times, get_day_schedule
+from ..models import Schedule, Appointment
+from ..utils import (get_appointment_times, get_day_schedule,
+                     get_next_appointment)
 from ..const import APPOINTMENT_TIME
 
 
@@ -61,3 +62,18 @@ class TestGetDaySchedule(TestCase):
             }
         ]
         self.assertEqual(expected, result)
+
+
+class TestGetNextAppointment(TestCase):
+
+    @patch("main.utils.Appointment.objects")
+    def test_get_appointment_returns_appointment(self, mock_appointment):
+        mock_appointment.filter.return_value = mock_appointment
+        mock_appointment.order_by.return_value = [1, 2]
+        expected = 1
+        result = get_next_appointment("user")
+        self.assertEqual(expected, result)
+    
+    def test_get_appointment_returns_none(self):
+        result = get_next_appointment(1)
+        self.assertIsNone(result)
