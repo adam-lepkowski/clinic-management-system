@@ -224,7 +224,7 @@ class AppointmentConfirmView(LoginRequiredMixin, View):
             return render(request, "main/appointment_confirm.html", context)
 
 
-class AppointmentView(View):
+class AppointmentView(LoginRequiredMixin, View):
     """
     Display a single appointment.
     """
