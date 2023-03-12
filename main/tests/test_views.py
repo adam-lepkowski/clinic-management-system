@@ -1,7 +1,8 @@
-from unittest.mock import patch, call
+from unittest.mock import patch, call, Mock
 
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
 
 from ..forms import ScheduleSearchForm
 
@@ -212,6 +213,17 @@ class TestMainView(TestCase):
             email="test@email.com",
             password="test_pw"
         )
+        self.data = {
+            "datetime": timezone.now(),
+            "patient": "1",
+            "doctor": "1",
+            "purpose": "Toothache",
+            "examination": "",
+            "diagnosis": "",
+            "advice": "",
+            "prescription": "",
+            "took_place": True
+        }
 
     def test_get_no_appointment_without_form_in_context(self):
         self.client.force_login(self.user)
@@ -227,5 +239,36 @@ class TestMainView(TestCase):
             mock_next_appointment):
         self.client.force_login(self.user)
         response = self.client.get("/")
+        self.assertTemplateUsed(response, "main/index.html")
+        self.assertIsNotNone(response.context.get("form"))
+
+    @patch("main.views.get_next_appointment", return_value=True)
+    @patch("main.views.Appointment")
+    @patch("main.views.AppointmentModelForm")
+    def test_post_valid_data_with_next_appointment(
+            self, mock_appointment_form, mock_appointment,
+            mock_next_appointment):
+        self.client.force_login(self.user)
+        response = self.client.post("/", data=self.data)
+        self.assertTemplateUsed(response, "main/index.html")
+        self.assertIsNotNone(response.context.get("form"))
+
+    @patch("main.views.get_next_appointment", return_value=False)
+    @patch("main.views.Appointment")
+    @patch("main.views.AppointmentModelForm")
+    def test_post_valid_data_without_next_appointment(
+            self, mock_appointment_form, mock_appointment,
+            mock_next_appointment):
+        self.client.force_login(self.user)
+        response = self.client.post("/", data=self.data)
+        self.assertTemplateUsed(response, "main/index.html")
+        self.assertIsNone(response.context.get("form"))
+
+    @patch("main.views.Appointment")
+    @patch("main.views.AppointmentModelForm.is_valid")
+    def test_post_invalid_data(self, mock_appointment_form, mock_appointment):
+        self.client.force_login(self.user)
+        mock_appointment_form.return_value = False
+        response = self.client.post("/", data=self.data)
         self.assertTemplateUsed(response, "main/index.html")
         self.assertIsNotNone(response.context.get("form"))
