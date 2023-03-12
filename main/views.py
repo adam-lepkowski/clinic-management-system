@@ -5,7 +5,7 @@ from django.db.utils import IntegrityError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
 
@@ -222,3 +222,21 @@ class AppointmentConfirmView(LoginRequiredMixin, View):
 
         else:
             return render(request, "main/appointment_confirm.html", context)
+
+
+class AppointmentView(View):
+    """
+    Display a single appointment.
+    """
+
+    def get(self, request, pk):
+        """
+        Display appointment details or 404 if invalid appointment ID.
+        """
+
+        appointment = get_object_or_404(Appointment, id=pk)
+        form = AppointmentModelForm(instance=appointment)
+        context = {
+            "form": form
+        }
+        return render(request, "main/appointment.html", context)
