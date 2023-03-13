@@ -301,7 +301,7 @@ class TestAppointmentView(TestCase):
     def test_post_valid_redirects(self, mock_404, mock_appointment_form):
         self.client.force_login(self.user)
         response = self.client.post(
-            "/appointment/1", data={"data":"data"}, follow=True
+            "/appointment/1", data={"data": "data"}, follow=True
         )
         self.assertRedirects(response, "/appointment/1")
 
@@ -310,8 +310,54 @@ class TestAppointmentView(TestCase):
     def test_post_invalid_returns_same_page(self, mock_404, mock_is_valid):
         self.client.force_login(self.user)
         response = self.client.post(
-            "/appointment/1", data={"data":"data"}, follow=True
+            "/appointment/1", data={"data": "data"}, follow=True
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "main/appointment.html")
+
+
+class TestAppointmentDeleteView(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_name",
+            email="test@email.com",
+            password="test_pw"
+        )
+
+    def test_get_no_appointment(self):
+        self.client.force_login(self.user)
+        response = self.client.get("/appointment/delete/1")
+        self.assertTemplateUsed(response, "404.html")
+
+    @patch("django.utils.dateformat.DateFormat")
+    @patch("main.views.get_object_or_404")
+    def test_get(self, mock_404, mock_dateformat):
+        self.client.force_login(self.user)
+        response = self.client.get("/appointment/delete/1")
+        self.assertTemplateUsed(response, "main/appointment_delete.html")
+
+    def test_post_no_appointment(self):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            "/appointment/delete/1", data={"data": "data"}
+        )
+        self.assertTemplateUsed(response, "404.html")
+
+    @patch("main.views.Appointment")
+    @patch("main.views.get_object_or_404")
+    def test_post_appointment_deleted(self, mock_404, mock_appointment):
+        self.client.force_login(self.user)
+        self.client.post("/appointment/delete/1", data={"data": "data"})
+        mock_404.assert_called_with(mock_appointment, id=1)
+        mock_404().delete.assert_called_once()
+
+    @patch("main.views.Appointment")
+    @patch("main.views.get_object_or_404")
+    def test_post_appointment_deleted(self, mock_404, mock_appointment):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            "/appointment/delete/1", data={"data": "data"}
+        )
+        self.assertRedirects(response, "/")
 
