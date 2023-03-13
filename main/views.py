@@ -258,3 +258,30 @@ class AppointmentView(LoginRequiredMixin, View):
             "form": form
         }
         return render(request, "main/appointment.html", context)
+
+
+class AppointmentDeleteView(LoginRequiredMixin, View):
+    """
+    Confirm and delete appointment.
+    """
+
+    def get(self, request, pk):
+        """
+        Confirm user wants to delete appointment.
+        """
+
+        appointment = get_object_or_404(Appointment, id=pk)
+        context = {
+            "appointment": appointment
+        }
+        return render(request, "main/appointment_delete.html", context)
+
+    def post(self, request, pk):
+        """
+        Delete an appointment and display main page. Return 404 if appointment
+        does not exist.
+        """
+
+        appointment = get_object_or_404(Appointment, id=pk)
+        appointment.delete()
+        return HttpResponseRedirect(reverse("main:main"))
