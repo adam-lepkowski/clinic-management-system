@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.test import TestCase
 
 from ..models import Patient, Address
@@ -12,6 +12,8 @@ class TestRegistrationView(TestCase):
             email="test@email.com",
             password="test_pw"
         )
+        nurses_group = Group.objects.create(name="nurses")
+        self.user.groups.add(nurses_group)
         self.address = {
             "address-street": "Test Lane",
             "address-number": "12a",
@@ -76,6 +78,8 @@ class TestSuccessRegistrationView(TestCase):
             email="test@email.com",
             password="test_pw"
         )
+        nurses_group = Group.objects.create(name="nurses")
+        self.user.groups.add(nurses_group)
         self.address = {
             "address-street": "Test Lane",
             "address-number": "12a",
