@@ -68,6 +68,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'clinic_management_system.context_processors.get_user_group',
                 'clinic_management_system.context_processors.get_kit',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
