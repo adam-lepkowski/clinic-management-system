@@ -16,7 +16,7 @@ def get_kit(request):
     return data
 
 
-def user_group(request):
+def get_user_group(request):
     """
     Check if logged belongs to nurses and physicians group.
 
