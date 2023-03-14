@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
@@ -11,10 +11,16 @@ from .models import Patient
 from main.models import Appointment
 
 
-class RegistrationView(LoginRequiredMixin, View):
+class RegistrationView(LoginRequiredMixin, UserPassesTestMixin, View):
     """
-    Display patient registration form.
+    Display patient registration form for nurses.
     """
+
+    def test_func(self):
+        """
+        Allow only nurses
+        """
+        return self.request.user.groups.filter(name__iexact="nurses").exists()
 
     def get(self, request):
         """
