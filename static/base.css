@@ -168,10 +168,15 @@ h6 {
 
 .align-center {
     align-self: center;
+    margin: auto;
 }
 
 .align-items-center {
     align-items: center;
+}
+
+.space-between {
+    justify-content: space-between;
 }
 
 .start-container {
