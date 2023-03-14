@@ -2,8 +2,10 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="{% url 'main:main' %}" class="nav-link">Main</a>
+            {% if is_nurse %}
             <a href="{% url 'main:schedule' %}" class="nav-link">Schedule</a>
             <a href="{% url 'patients:register' %}" class="nav-link">Register</a>
+            {% endif %}
         </div>
         <div class="search-container">
             <form action="{% url 'patients:search_results' %}" method="GET">
