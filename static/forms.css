@@ -1,34 +1,30 @@
 /*
-    Wide form container
+    Form container
 */
-.wide-form-container {
-    align-items: center;
+.form-container {
     background-color: #EEEEEE;
     border-radius: 25px;
     border: 1px solid #CED0D3;
-    display: flex;
-    flex-direction: column;
     margin: auto;
     padding: 2rem;
     width: 50%;
 }
 
-.wide-form-container h1 {
+.form-heading {
     color: #658864;
     font-size: 3rem;
     margin-bottom: 0.5rem;
 }
 
 /*
-    Wide form
+    Generic form
 */
-.wide-form {
+.generic-form {
     display: flex;
     flex-direction: column;
-    width: 80%;
 }
 
-.wide-form input {
+.generic-form input {
     border-color: #CED0D3;
     border-style: solid;
     border-radius: 25px;
@@ -38,37 +34,19 @@
     padding: 0 0.5rem;
 }
 
-.wide-form input:hover {
+.generic-form input:hover {
     border-color: #9d9e9e;
 }
 
-.wide-form label {
+.generic-form label {
     color: #658864;
     font-size: 2rem;
     font-weight: 400;
     margin-bottom: 0.1rem;
 }
 
-.wide-form button {
-    align-self: center;
-    border-radius: 25px;
-    border-style: solid;
-    font-size: 1.5rem;
-    width: 50%;
-    padding: 0.25rem;
-}
 
-.wide-form button[type="submit"] {
-    color: #EEEEEE;
-    background-color: #658864;
-}
-
-.wide-form button[type="submit"]:hover {
-    color: #EEEEEE;
-    background-color: #4a6449;
-}
-
-.wide-form select {
+.generic-form select {
     background-color: #ffffff;
     border-color: #CED0D3;
     border-style: solid;
@@ -78,11 +56,11 @@
     padding: 0 0.5rem;
 }
 
-.wide-form select:hover {
+.generic-form select:hover {
     border-color: #9d9e9e;
 }
 
-.wide-form textarea {
+.generic-form textarea {
     border-color: #CED0D3;
     border-style: solid;
     border-radius: 25px;
@@ -92,7 +70,7 @@
     padding: 0.5rem;
 }
 
-.wide-form textarea:hover {
+.generic-form textarea:hover {
     border-color: #9d9e9e;
 }
 
