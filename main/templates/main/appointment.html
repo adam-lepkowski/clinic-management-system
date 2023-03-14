@@ -17,6 +17,9 @@
             {{ field.errors }}
         {% endfor %}
         <button type="submit">Submit</button>
+        {% if not form.instance.took_place %}
+            <a href="{% url 'main:delete_appointment' form.instance.id %}" class="btn-red">Cancel</a>
+        {% endif %}
     </form>
 </section>
 
