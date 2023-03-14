@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Address(models.Model):
@@ -63,3 +64,6 @@ class Patient(models.Model):
         """
         
         return self.name()
+
+    def get_absolute_url(self):
+        return reverse("patients:patient", args=[self.id])
