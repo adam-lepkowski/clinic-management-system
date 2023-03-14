@@ -1,6 +1,6 @@
-from unittest.mock import patch, call, Mock
+from unittest.mock import patch, call
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.test import TestCase
 from django.utils import timezone
 
@@ -213,6 +213,7 @@ class TestMainView(TestCase):
             email="test@email.com",
             password="test_pw"
         )
+        self.physicians_group = Group.objects.create(name="physicians")
         self.data = {
             "datetime": timezone.now(),
             "patient": "1",
@@ -238,6 +239,7 @@ class TestMainView(TestCase):
             self, mock_appointment, mock_appointment_form,
             mock_next_appointment):
         self.client.force_login(self.user)
+        self.user.groups.add(self.physicians_group)
         response = self.client.get("/")
         self.assertTemplateUsed(response, "main/index.html")
         self.assertIsNotNone(response.context.get("form"))
