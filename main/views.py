@@ -24,18 +24,30 @@ class MainView(LoginRequiredMixin, View):
 
     def get(self, request):
         """
-        Render main page.
+        Next appointment for doctor. List of scheduled appointments for nurse.
         """
 
-        doctor = self.request.user
-        appointment = get_next_appointment(doctor)
-        if appointment:
-            form = AppointmentModelForm(
-                instance=appointment,
-                label_suffix=""
-            )
+        user = self.request.user
+        is_nurse = user.groups.filter(name__iexact="nurses").exists()
+        is_doctor = user.groups.filter(name__iexact="physicians").exists()
+
+        if is_doctor:
+            appointment = get_next_appointment(user)
+            if appointment:
+                form = AppointmentModelForm(
+                    instance=appointment,
+                    label_suffix=""
+                )
+                context = {
+                    "form": form
+                }
+                return render(request, "main/index.html", context)
+        elif is_nurse:
+            appointments = Appointment.objects.filter(
+                Q(datetime__gte=datetime.datetime.today())
+            ).order_by("datetime")
             context = {
-                "form": form
+                "appointments": appointments
             }
             return render(request, "main/index.html", context)
         return render(request, "main/index.html")
