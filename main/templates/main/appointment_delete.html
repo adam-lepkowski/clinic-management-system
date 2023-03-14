@@ -11,17 +11,17 @@ Login
 
 {% block content %}
 <section class="content">
-    <div class="wide-form-container">
-        <h1>Cancel appointment</h1>
-        <form action="" method="POST" class="wide-form">
+    <div class="column-container align-items-center form-container">
+        <h1 class="form-heading">Cancel appointment</h1>
+        <form action="" method="POST" class="generic-form width-75">
             {% csrf_token %}
             <input type="hidden" value="{{ appointment.id }}" name="appointment_pk">
             <p>Are you sure you want to cancel {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
                 {{ appointment.datetime|date:"l, F j, Y" }} appointment with {{ appointment.doctor.first_name }} 
                 {{ appointment.doctor.last_name }}? </p>
             <div class="spaced-container">
-                <a href="{{ appointment.get_absolute_url }}" class="btn-red">Cancel</a>
-                <button type="submit">Confirm</button>
+                <a href="{{ appointment.get_absolute_url }}" class="btn-red width-50">Cancel</a>
+                <button type="submit" class="btn-green width-50">Confirm</button>
             </div>
         </form>
     </div>

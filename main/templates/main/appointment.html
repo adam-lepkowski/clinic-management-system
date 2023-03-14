@@ -9,17 +9,20 @@
 {% include "includes/navbar.html" %}
 
 <section class="content">
-    <form action="" method="POST" class="wide-form">
+    <form action="" method="POST" class="generic-form width-75">
         {% csrf_token %}
         {% for field in form %}
             {{ field.label_tag }}
             {{ field }}
             {{ field.errors }}
         {% endfor %}
-        <button type="submit">Submit</button>
-        {% if not form.instance.took_place %}
-            <a href="{% url 'main:delete_appointment' form.instance.id %}" class="btn-red">Cancel</a>
-        {% endif %}
+        <div class="row-container">
+            <button type="submit" class="btn-green width-50 {% if form.instance.took_place %}align-center {% endif %}">Submit</button>
+            {% if not form.instance.took_place %}
+            <a href="{% url 'main:delete_appointment' form.instance.id %}" class="btn-red width-50">Cancel</a>
+            {% endif %}
+        </div>
+
     </form>
 </section>
 

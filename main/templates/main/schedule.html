@@ -13,16 +13,16 @@ Schedule an appointment
 {% include "includes/navbar.html" %}
 
 <section class="content">
-    <div class="wide-form-container">
-        <h1>Schedule</h1>
-        <form id="schedule-form" action="{% url 'main:search_results' %}" method="GET" class="wide-form"
+    <div class="column-container align-items-center form-container">
+        <h1 class="form-heading">Schedule</h1>
+        <form id="schedule-form" action="{% url 'main:search_results' %}" method="GET" class="generic-form width-75"
             specialties-url="{% url 'main:schedule' %}">
             {% for field in form %}
             {{ field.label_tag }}
             {{ field }}
             {{ field.errors }}
             {% endfor %}
-            <button type="submit">Submit</button>
+            <button type="submit" class="btn-green width-50 align-center">Submit</button>
         </form>
     </div>
 </section>
