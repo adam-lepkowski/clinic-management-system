@@ -166,6 +166,14 @@ h6 {
     align-self: flex-start;
 }
 
+.align-center {
+    align-self: center;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
 .start-container {
     align-items: center;
     display: flex;
@@ -181,6 +189,20 @@ h6 {
 }
 
 /*
+    Containers
+*/
+
+.column-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.row-container {
+    display: flex;
+    flex-direction: row;
+}
+
+/*
     Errorlist   
 */
 .errorlist {
@@ -191,4 +213,24 @@ h6 {
 .errorlist li {
     color: #C87972;
     display: block;
+}
+
+/*
+    Size
+*/
+
+.width-100 {
+    width: 100%;
+}
+
+.width-75 {
+    width: 75%;
+}
+
+.width-50 {
+    width: 50%;
+}
+
+.width-25 {
+    width: 25%;
 }
