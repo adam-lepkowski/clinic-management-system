@@ -117,10 +117,16 @@ class ScheduleSearchView(LoginRequiredMixin, UserPassesTestMixin, View):
         return render(request, "main/schedule.html", context)
 
 
-class ScheduleListView(LoginRequiredMixin, View):
+class ScheduleListView(LoginRequiredMixin, UserPassesTestMixin, View):
     """
     Display schedule search results.
     """
+
+    def test_func(self):
+        """
+        Allow only nurses
+        """
+        return self.request.user.groups.filter(name__iexact="nurses").exists()
 
     def get(self, request):
         """
