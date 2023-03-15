@@ -33,7 +33,9 @@ class ScheduleSearchForm(forms.Form):
     Display doctors available for appointments.
     """
 
-    specialties = forms.ModelChoiceField(queryset=Group.objects.all())
+    specialties = forms.ModelChoiceField(
+        queryset=Group.objects.all().exclude(name="nurses")
+    )
     date = forms.DateField(widget=forms.Select(choices=AVAILABLE_DATES))
     employee = forms.ModelChoiceField(
         queryset=User.objects.none(), required=False
