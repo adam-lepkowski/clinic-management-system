@@ -17,8 +17,8 @@
             {{ field.errors }}
         {% endfor %}
         <div class="row-container">
-            <button type="submit" class="btn-green width-50 {% if form.instance.took_place %}align-center {% endif %}">Submit</button>
-            {% if not form.instance.took_place %}
+            <button type="submit" class="btn-green width-50 {% if form.instance.took_place or is_doctor %}align-center {% endif %}">Submit</button>
+            {% if not form.instance.took_place and not is_doctor%}
             <a href="{% url 'main:delete_appointment' form.instance.id %}" class="btn-red width-50">Cancel</a>
             {% endif %}
         </div>
