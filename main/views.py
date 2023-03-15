@@ -290,10 +290,16 @@ class AppointmentView(LoginRequiredMixin, View):
         return render(request, "main/appointment.html", context)
 
 
-class AppointmentDeleteView(LoginRequiredMixin, View):
+class AppointmentDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
     """
     Confirm and delete appointment.
     """
+
+    def test_func(self):
+        """
+        Allow only nurses
+        """
+        return self.request.user.groups.filter(name__iexact="nurses").exists()
 
     def get(self, request, pk):
         """
