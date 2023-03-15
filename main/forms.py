@@ -34,7 +34,7 @@ class ScheduleSearchForm(forms.Form):
     """
 
     specialties = forms.ModelChoiceField(
-        queryset=Group.objects.all().exclude(name="nurses")
+        queryset=Group.objects.exclude(name="nurses")
     )
     date = forms.DateField(widget=forms.Select(choices=AVAILABLE_DATES))
     employee = forms.ModelChoiceField(
