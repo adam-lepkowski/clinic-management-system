@@ -14,6 +14,14 @@ class TestScheduleSearchView(TestCase):
             email="test@email.com",
             password="test_pw"
         )
+        self.nurses_group = Group.objects.create(name="nurses")
+        self.user.groups.add(self.nurses_group)
+
+    def test_get_not_nurse_forbidden(self):
+        self.client.force_login(self.user)
+        self.user.groups.remove(self.nurses_group)
+        response = self.client.get("/schedule/search")
+        self.assertEqual(response.status_code, 403)
 
     def test_get(self):
         self.client.force_login(self.user)
@@ -43,11 +51,19 @@ class TestScheduleListView(TestCase):
             "date": "2023-01-01",
             "employee": 1
         }
+        self.nurses_group = Group.objects.create(name="nurses")
+        self.user.groups.add(self.nurses_group)
+
+    def test_get_not_nurse_forbidden(self):
+        self.client.force_login(self.user)
+        self.user.groups.remove(self.nurses_group)
+        response = self.client.get("/schedule/search-results", data=self.data)
+        self.assertEqual(response.status_code, 403)
 
     @patch("main.views.Schedule.objects.filter")
     def test_get(self, mock_schedule_filter):
         self.client.force_login(self.user)
-        response = self.client.get('/schedule/search-results', data=self.data)
+        response = self.client.get("/schedule/search-results", data=self.data)
         self.assertTemplateUsed(response, "main/schedule_search_results.html")
 
     @patch("main.views.Q")
@@ -116,6 +132,14 @@ class TestAppointmentConfirmView(TestCase):
             "personal_id": "12345678911",
             "purpose": "lorem ipsum"
         }
+        self.nurses_group = Group.objects.create(name="nurses")
+        self.user.groups.add(self.nurses_group)
+
+    def test_get_not_nurse_forbidden(self):
+        self.client.force_login(self.user)
+        self.user.groups.remove(self.nurses_group)
+        response = self.client.get("/appointment/confirm")
+        self.assertEqual(response.status_code, 403)
 
     def test_get_valid_session(self):
         self.client.force_login(self.user)
@@ -326,6 +350,14 @@ class TestAppointmentDeleteView(TestCase):
             email="test@email.com",
             password="test_pw"
         )
+        self.nurses_group = Group.objects.create(name="nurses")
+        self.user.groups.add(self.nurses_group)
+
+    def test_get_not_nurse_forbidden(self):
+        self.client.force_login(self.user)
+        self.user.groups.remove(self.nurses_group)
+        response = self.client.get("/appointment/confirm")
+        self.assertEqual(response.status_code, 403)
 
     def test_get_no_appointment(self):
         self.client.force_login(self.user)
@@ -362,4 +394,3 @@ class TestAppointmentDeleteView(TestCase):
             "/appointment/delete/1", data={"data": "data"}
         )
         self.assertRedirects(response, "/")
-
