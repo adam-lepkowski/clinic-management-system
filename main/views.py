@@ -2,7 +2,7 @@ import datetime
 
 from django.db.models import Q
 from django.db.utils import IntegrityError
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -87,10 +87,16 @@ class MainView(LoginRequiredMixin, View):
         return render(request, "main/index.html", context)
 
 
-class ScheduleSearchView(LoginRequiredMixin, View):
+class ScheduleSearchView(LoginRequiredMixin, UserPassesTestMixin, View):
     """
-    Display schedule search form
+    Allow nurses to schedule appointments.
     """
+
+    def test_func(self):
+        """
+        Allow only nurses
+        """
+        return self.request.user.groups.filter(name__iexact="nurses").exists()
 
     def get(self, request):
         """
