@@ -169,10 +169,16 @@ class ScheduleListView(LoginRequiredMixin, UserPassesTestMixin, View):
         return HttpResponseRedirect(reverse("main:confirm_appointment"))
 
 
-class AppointmentConfirmView(LoginRequiredMixin, View):
+class AppointmentConfirmView(LoginRequiredMixin, UserPassesTestMixin, View):
     """
     Select a patient and confirm appointment.
     """
+
+    def test_func(self):
+        """
+        Allow only nurses
+        """
+        return self.request.user.groups.filter(name__iexact="nurses").exists()
 
     def get(self, request):
         """
