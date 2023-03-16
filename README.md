@@ -49,3 +49,30 @@ Register a patient through „Register” form available in the navbar.
 Navbar „Schedule”. Appointments can be set up from today to 7 days ahead. You can filter specialties (query for groups excluding nurses. See Groups for more details) to display schedules for specific physicians which will appear as the third filter. The minimum to see schedules is specialty and date. The results page will display all available appointment times for all doctors on schedule on that day. Appointment time is set up to 30 minutes (can be changed in main/const.py) so physicians shift will be split up in 30 minute intervals and displayed here. Clicking on Schedule will take you to another form. Fill in patients personal id and visit purpose and submit. Appointment scheduled and you are redirected to main page.  
 Important 
 * you can’t schedule a patient to two physicians at the same time
+
+#### Main page
+Different for nurses and physicians. Nurses see a list of all future appointments. They can cancel any of them.
+
+#### Cancel appointments
+If an appointment haven’t taken place yet (status took_place=False or None) you can cancel it. Click cancel on any of the ones displayed in the main page will redirect you to a page where you can either confirm you want to delete the appointment or cancel the whole operation. If you confirm, the appointment is canceled and you will be redirected to main page. If you resign it will redirect you to the appointment details page (the one you tried to cancel).
+
+#### Appointment
+As a rule – only physicians should edit appointment details. Nurses can too but shouldn’t (I just assumed they are trustworthy). A nurse can also cancel appointment from this page (if it haven’t taken place yet).
+
+#### Searchbar
+In the navigation bar you’ll find a search bar. Type in patients first name, last name or personal id and display search results on submition.
+* partial matches allowed
+* only one of three search criteria mentioned above  
+
+Click on any patients details to display his medical history.
+
+#### Patient detail page
+You can edit patient personal details and display his medical history (which is a history of his appointments).
+
+### Physician
+Can’t register patients or schedule/delete appointments. He’s here to diagnose, treat and cure patients.
+
+#### Main page
+A form with the nearest appointment that haven’t taken place yet. If a patient showed up – fill out the form. If not – mark „Took place” as No and submit. The next appointment will be displayed. If no appointments scheduled for today – you will see a heading informing you about it.
+
+A physician can edit appointment details and display patient details/medical history.
