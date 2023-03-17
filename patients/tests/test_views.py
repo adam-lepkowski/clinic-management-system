@@ -3,8 +3,6 @@ from unittest.mock import patch
 from django.contrib.auth.models import User, Group
 from django.test import TestCase
 
-from ..models import Patient, Address
-
 
 class TestRegistrationView(TestCase):
 
@@ -148,23 +146,6 @@ class TestSearchResultsView(TestCase):
             username="test_name",
             email="test@email.com",
             password="test_pw"
-        )
-        self.address = Address.objects.create(
-            street="Test Lane",
-            number="12a",
-            apartment="123",
-            zip_code="00-000",
-            city="Testington",
-            country="Republic of Testland"
-        )
-        self.patient_1 = Patient.objects.create(
-            first_name="Johnny",
-            last_name="Test",
-            date_of_birth="2022-12-12",
-            personal_id="12345678911",
-            email="email@email.com",
-            phone="0123456789",
-            address=self.address
         )
 
     def test_get_redirects_anonymous_user_to_login(self):
