@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.contrib.auth.models import User, Group
 from django.test import TestCase
 
@@ -14,58 +16,52 @@ class TestRegistrationView(TestCase):
         )
         nurses_group = Group.objects.create(name="nurses")
         self.user.groups.add(nurses_group)
-        self.address = {
-            "address-street": "Test Lane",
-            "address-number": "12a",
-            "address-apartment": "123",
-            "address-zip_code": "00-000",
-            "address-city": "Testington",
-            "address-country": "Republic of Testland"
-        }
-        self.patient = {
-            "patient-first_name": "Johnny",
-            "patient-last_name": "Test",
-            "patient-date_of_birth": "2022-12-12",
-            "patient-personal_id": "12345678911",
-            "patient-email": "email@email.com",
-            "patient-phone": "0123456789"
-        }
 
     def test_get_redirects_anonymous_user_to_login(self):
         response = self.client.get("/patient/register", follow=True)
         self.assertRedirects(response, "/account/login?next=/patient/register")
 
-    def test_post_redirects_anonymous_user_to_login(self):
-        data = self.address | self.patient
-        response = self.client.post("/patient/register", data, follow=True)
+    @patch("patients.views.AddressForm")
+    @patch("patients.views.PatientForm")
+    def test_post_redirects_anonymous_user_to_login(
+            self, mock_patient_form, mock_address_form):
+        response = self.client.post("/patient/register", follow=True)
         self.assertRedirects(response, "/account/login?next=/patient/register")
 
-    def test_registration_valid_forms(self):
+    @patch("patients.views.AddressForm")
+    @patch("patients.views.PatientForm")
+    def test_registration_valid_forms(
+            self, mock_patient_form, mock_address_form):
         self.client.force_login(self.user)
-        data = self.address | self.patient
-        response = self.client.post("/patient/register", data, follow=True)
+        response = self.client.post("/patient/register", follow=True)
+        mock_patient_form().save.assert_called_once()
+        mock_address_form().save.assert_called_once()
         self.assertRedirects(response, "/patient/registered")
 
-    def test_registration_valid_forms_sets_session_attr(self):
+    @patch("patients.views.AddressForm")
+    @patch("patients.views.PatientForm")
+    def test_registration_valid_forms_sets_session_attr(
+            self, mock_patient_form, mock_address_form):
         self.client.force_login(self.user)
-        data = self.address | self.patient
-        self.client.post("/patient/register", data)
+        self.client.post("/patient/register")
         result = self.client.session.get("patient-registered", False)
         self.assertTrue(result)
 
-    def test_registration_invalid_address_form(self):
+    @patch("patients.views.AddressForm.is_valid", return_value=False)
+    @patch("patients.views.PatientForm")
+    def test_registration_invalid_address_form(
+            self, mock_patient_form, mock_address_is_valid):
         self.client.force_login(self.user)
-        self.address["address-city"] = ""
-        data = self.address | self.patient
-        response = self.client.post("/patient/register", data, follow=True)
+        response = self.client.post("/patient/register", follow=True)
         self.assertTemplateNotUsed(response, "/patient/registered")
         self.assertEqual(len(response.redirect_chain), 0)
 
-    def test_registration_invalid_patient_form(self):
+    @patch("patients.views.AddressForm")
+    @patch("patients.views.PatientForm.is_valid", return_value=False)
+    def test_registration_invalid_patient_form(
+            self, mock_patient_is_valid, mock_address_form):
         self.client.force_login(self.user)
-        self.patient["patient-first_name"] = ""
-        data = self.address | self.patient
-        response = self.client.post("/patient/register", data, follow=True)
+        response = self.client.post("/patient/register", follow=True)
         self.assertTemplateNotUsed(response, "/patient/registered")
         self.assertEqual(len(response.redirect_chain), 0)
 
@@ -80,22 +76,6 @@ class TestSuccessRegistrationView(TestCase):
         )
         nurses_group = Group.objects.create(name="nurses")
         self.user.groups.add(nurses_group)
-        self.address = {
-            "address-street": "Test Lane",
-            "address-number": "12a",
-            "address-apartment": "123",
-            "address-zip_code": "00-000",
-            "address-city": "Testington",
-            "address-country": "Republic of Testland"
-        }
-        self.patient = {
-            "patient-first_name": "Johnny",
-            "patient-last_name": "Test",
-            "patient-date_of_birth": "2022-12-12",
-            "patient-personal_id": "12345678911",
-            "patient-email": "email@email.com",
-            "patient-phone": "0123456789"
-        }
 
     def test_redirect_if_no_form_submitted(self):
         self.client.force_login(self.user)
