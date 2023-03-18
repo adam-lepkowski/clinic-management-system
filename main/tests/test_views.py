@@ -293,6 +293,17 @@ class TestMainView(TestCase):
         )
         self.assertTemplateUsed(response, "main/index.html")
 
+    @patch("main.views.AppointmentModelForm")
+    @patch("main.views.get_next_appointment")
+    def test_get_doctor(self, mock_get_appointment, mock_appointment_form):
+        self.user.groups.add(self.physicians_group)
+        response = self.client.get("/")
+        self.assertEqual(
+            response.context["form"],
+            mock_appointment_form()
+        )
+        self.assertTemplateUsed(response, "main/index.html")
+
 
 class TestAppointmentView(TestCase):
 
