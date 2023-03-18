@@ -4,8 +4,6 @@ from django.contrib.auth.models import User, Group
 from django.test import TestCase
 from django.utils import timezone
 
-from ..forms import ScheduleSearchForm
-
 
 class TestScheduleSearchView(TestCase):
     def setUp(self):
@@ -23,9 +21,10 @@ class TestScheduleSearchView(TestCase):
         response = self.client.get("/schedule/search")
         self.assertEqual(response.status_code, 403)
 
-    def test_get(self):
+    @patch("main.views.ScheduleSearchForm")
+    def test_get(self, mock_schedule_form):
         response = self.client.get("/schedule/search")
-        self.assertIsInstance(response.context["form"], ScheduleSearchForm)
+        self.assertEqual(response.context["form"], mock_schedule_form())
         self.assertTemplateUsed(response, "main/schedule.html")
 
     def test_ajax_get(self):
