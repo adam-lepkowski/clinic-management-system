@@ -213,6 +213,22 @@ class TestAppointmentConfirmView(TestCase):
             "Invalid doctor ID"
         )
 
+    @patch("main.views.Patient")
+    @patch("main.views.User")
+    @patch("main.views.datetime")
+    @patch("main.views.Appointment")
+    def test_valid_post_resets_session(self, mock_save, mock_datetime,
+                                       mock_user, mock_patient):
+        session = self.client.session
+        session["hour"] = "08:30"
+        session["date"] = "2023-01-01"
+        session["doctor_id"] = "1"
+        session.save()
+        self.client.post("/appointment/confirm", data=self.post_data)
+        self.assertIsNone(self.client.session["hour"])
+        self.assertIsNone(self.client.session["date"])
+        self.assertIsNone(self.client.session["doctor_id"])
+
 
 class TestMainView(TestCase):
 
