@@ -280,6 +280,19 @@ class TestMainView(TestCase):
         self.assertTemplateUsed(response, "main/index.html")
         self.assertIsNotNone(response.context.get("form"))
 
+    @patch("main.views.Appointment")
+    def test_get_nurse(self, mock_appointment):
+        nurses_group = Group.objects.create(name="nurses")
+        self.user.groups.add(nurses_group)
+        response = self.client.get("/")
+        mock_returned_appointments = mock_appointment.objects.filter().order_by
+        mock_returned_appointments.assert_called_once()
+        self.assertEqual(
+            response.context["appointments"],
+            mock_returned_appointments()
+        )
+        self.assertTemplateUsed(response, "main/index.html")
+
 
 class TestAppointmentView(TestCase):
 
