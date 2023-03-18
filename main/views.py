@@ -247,7 +247,9 @@ class AppointmentConfirmView(LoginRequiredMixin, UserPassesTestMixin, View):
             except IntegrityError as e:
                 context["error"] = str(e)
                 return render(request, "main/appointment_confirm.html", context)
-
+            request.session["hour"] = None
+            request.session["date"] = None
+            request.session["doctor_id"] = None
             return HttpResponseRedirect(reverse("main:main"))
 
         else:
