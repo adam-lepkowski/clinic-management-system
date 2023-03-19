@@ -1,35 +1,21 @@
-from datetime import datetime, timedelta, time, date
+from datetime import datetime, time, date
 from unittest.mock import patch, Mock, MagicMock
 
 from django.test import TestCase
-from django.contrib.auth.models import User
 
-from ..models import Schedule, Appointment
 from ..utils import (get_appointment_times, get_day_schedule,
                      get_next_appointment, is_appointment_available)
-from ..const import APPOINTMENT_TIME
 
 
 class TestGetAppointmentTimes(TestCase):
 
-    def setUp(self):
-        self.user = User.objects.create(
-            username="TestUser",
-            first_name="Teston",
-            last_name="Testingly"
-        )
-        Schedule.objects.create(
-            date="2023-01-01",
-            start="08:00",
-            end="16:00",
-            employee=self.user)
-
-    def test_get_appointment_times(self):
-        result = get_appointment_times(Schedule.objects.get(id=1))
-        start = datetime(2022, 10, 10, hour=8)
-        expected = [start + timedelta(minutes=APPOINTMENT_TIME * i)
-                    for i in range(16)]
-        expected = [dt.time() for dt in expected]
+    @patch("main.utils.datetime")
+    def test_get_appointment_times(self, mock_datetime):
+        side_effect = [datetime(2023, 1, 1, 8), datetime(2023, 1, 1, 9)]
+        mock_datetime.combine.side_effect = side_effect
+        mock_schedule = Mock()
+        result = get_appointment_times(mock_schedule)
+        expected = [time(8), time(8, 30)]
         self.assertEqual(expected, result)
 
 
