@@ -18,5 +18,7 @@
 {% block scripts %}
 
 {% endblock %}
-<script src="https://kit.fontawesome.com/{{ kit }}" crossorigin="anonymous"></script>
+<script defer src="{% static 'fontawesome.js' %}"></script>
+<script defer src="{% static 'solid.js' %}"></script>
+<script defer src="{% static 'regular.js' %}"></script>
 </html>
