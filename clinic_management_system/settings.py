@@ -12,8 +12,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 
 from dotenv import load_dotenv, find_dotenv
+import dj_database_url
+
 
 load_dotenv(find_dotenv())
 
@@ -85,12 +88,19 @@ WSGI_APPLICATION = 'clinic_management_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DEVELOPMENT = os.environ.get("DEVELOPMENT", "False") == "True"
+
+if DEVELOPMENT:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+elif len(sys.argv) > 0 and sys.argv[1] != "collectstatic":
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    }
 
 
 # Password validation
